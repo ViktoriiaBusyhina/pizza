@@ -1,5 +1,6 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.entity.Customer;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.repository.PizzaRepository;
 import com.example.pizza.service.PizzaService;
@@ -39,9 +40,9 @@ public class PizzaServiceImpl implements PizzaService {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
         if (pizzaOptional.isPresent()) {
             Pizza pizza= pizzaOptional.get();
-            pizza.setPizzaName(pizzaUpdate.getPizzaName());
-            pizza.setSize(pizzaUpdate.getSize());
-            pizzaRepository.save(pizza);
+            Pizza existingPizza = pizzaOptional.get();
+            Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
+            pizzaRepository.save(updated);
         }
         return pizzaOptional.orElse(null);
     }

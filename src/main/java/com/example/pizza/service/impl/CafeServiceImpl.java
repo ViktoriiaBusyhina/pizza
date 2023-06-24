@@ -39,12 +39,9 @@ public class CafeServiceImpl implements CafeService {
     public Cafe update(UUID uuid, Cafe cafeUpdate) {
         Optional<Cafe> cafeOptional = cafeRepository.findById(uuid);
         if (cafeOptional.isPresent()) {
-            Cafe cafe = cafeOptional.get();
-            cafe.setName(cafeUpdate.getName());
-            cafe.setPhone(cafeUpdate.getPhone());
-            cafe.setAddress(cafeUpdate.getAddress());
-            cafe.setSchedule(cafeUpdate.getSchedule());
-            cafeRepository.save(cafe);
+            Cafe existingCafe = cafeOptional.get();
+            Cafe updated = cafeUpdateServise.transform(existingCafe, cafeUpdate);
+            cafeRepository.save(updated);
         }
         return cafeOptional.orElse(null);
     }
