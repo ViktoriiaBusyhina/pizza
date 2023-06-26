@@ -31,6 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Customer findById(UUID uuid) {
         Optional<Customer> customerOptional = customerRepository.findById(uuid);
         return customerOptional.orElse(null);
