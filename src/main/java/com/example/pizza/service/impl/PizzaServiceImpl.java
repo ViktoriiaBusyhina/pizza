@@ -4,6 +4,8 @@ import com.example.pizza.entity.Customer;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.repository.PizzaRepository;
 import com.example.pizza.service.PizzaService;
+import com.example.pizza.service.conventer.CustomerUpdateService;
+import com.example.pizza.service.conventer.PizzaUpdateService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.util.Optional;
 public class PizzaServiceImpl implements PizzaService {
 
     private final PizzaRepository pizzaRepository;
-
+    private final PizzaUpdateService pizzaUpdateService;
     @Override
     public void createNewPizza(Pizza pizza) {
         pizzaRepository.save(pizza);

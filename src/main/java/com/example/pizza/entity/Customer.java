@@ -13,20 +13,20 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
+    @Column(name = "id")
     private Integer customerId;
 
-    @Column(name = "customer_name")
-    private Integer customerName;
+    @Column(name = "name")
+    private Integer Name;
 
-    @Column(name = "customer_address")
-    private Integer customerAddress;
+    @Column(name = "address")
+    private Integer Address;
 
-    @Column(name = "customer_phone")
-    private Integer customerPhone;
+    @Column(name = "phone")
+    private Integer Phone;
 
-    @Column(name = "customer_email")
-    private Integer customerEmail;
+    @Column(name = "email")
+    private Integer Email;
 
 
 }

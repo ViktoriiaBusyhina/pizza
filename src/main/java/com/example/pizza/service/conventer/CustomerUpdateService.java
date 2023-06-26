@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerUpdateService {
     public Customer convert(Customer customer, Customer customerUpdate) {
-        if (customerUpdate.getCustomerName() != null) {
-            customer.setCustomerName(customerUpdate.getCustomerName());
+        if (customerUpdate.getName() != null) {
+            customer.setName(customerUpdate.getName());
         }
-        if (customerUpdate.getCustomerEmail() != null) {
-            customer.setCustomerEmail(customerUpdate.getCustomerEmail());
+        if (customerUpdate.getEmail() != null) {
+            customer.setEmail(customerUpdate.getEmail());
         }
-        if (customerUpdate.getCustomerAddress() != null) {
-            customer.setCustomerAddress(customerUpdate.getCustomerAddress());
+        if (customerUpdate.getAddress() != null) {
+            customer.setAddress(customerUpdate.getAddress());
         }
-        if (customerUpdate.getCustomerPhone() != null) {
-            customer.setCustomerPhone(customerUpdate.getCustomerPhone());
+        if (customerUpdate.getPhone() != null) {
+            customer.setPhone(customerUpdate.getPhone());
         }
         return customer;
 

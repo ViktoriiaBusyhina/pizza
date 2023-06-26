@@ -1,10 +1,9 @@
 package com.example.pizza.service.impl;
 
 import com.example.pizza.entity.Cafe;
-import com.example.pizza.entity.Customer;
 import com.example.pizza.repository.CafeRepository;
-import com.example.pizza.repository.CustomerRepository;
 import com.example.pizza.service.CafeService;
+import com.example.pizza.service.conventer.CafeUpdateService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,7 @@ import java.util.UUID;
 public class CafeServiceImpl implements CafeService {
 
     private final CafeRepository cafeRepository;
+    private final CafeUpdateService cafeUpdateService;
 
     @Override
     public void createNewCafe(Cafe cafe) {
@@ -40,7 +40,7 @@ public class CafeServiceImpl implements CafeService {
         Optional<Cafe> cafeOptional = cafeRepository.findById(uuid);
         if (cafeOptional.isPresent()) {
             Cafe existingCafe = cafeOptional.get();
-            Cafe updated = cafeUpdateServise.transform(existingCafe, cafeUpdate);
+            Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
             cafeRepository.save(updated);
         }
         return cafeOptional.orElse(null);
