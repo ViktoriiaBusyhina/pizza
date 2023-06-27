@@ -1,6 +1,5 @@
 package com.example.pizza.controller;
 
-import com.example.pizza.entity.Customer;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.service.PizzaService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -49,6 +47,12 @@ public class PizzaController {
     @DeleteMapping(value = "/pizza/delete/{id}")
     public ResponseEntity<String> deletePizza(@PathVariable Integer id) {
         pizzaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/pizza/blocking/{id}")
+    public ResponseEntity<String> blockingPizza(@PathVariable Integer id){
+        pizzaService.blockingPizza(id);
         return ResponseEntity.ok().build();
     }
 
