@@ -50,9 +50,9 @@ public class PizzaController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/pizza/blocking/{id}")
-    public ResponseEntity<String> blockingPizza(@PathVariable Integer id){
-        pizzaService.blockingPizza(id);
+    @PostMapping(value = "/pizza/block_pizza/{id}")
+    public ResponseEntity<String> blockPizzaById(@PathVariable Integer id){
+        pizzaService.blockPizzaById(id);
         return ResponseEntity.ok().build();
     }
 

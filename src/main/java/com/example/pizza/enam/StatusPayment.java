@@ -2,7 +2,7 @@ package com.example.pizza.enam;
 
 public enum StatusPayment {
 
-    PAYMENT_SUCCESSFUL,
+    SUCCESSFUL,
 
-    PAYMENT_FAILED
+    FAILED
 }

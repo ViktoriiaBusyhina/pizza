@@ -49,16 +49,18 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         pizzaRepository.deleteById(id);
     }
 
     @Override
-    public void blockingPizza(Integer id) {
+    @Transactional
+    public void blockPizzaById(Integer id) {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
         if (pizzaOptional.isPresent()) {
             Pizza pizza = pizzaOptional.get();
-            pizza.setStatus(StatusPizza.valueOf(String.valueOf(StatusPizza.BLOCKING)));
+            pizza.setStatus(StatusPizza.valueOf(String.valueOf(StatusPizza.UNAVAILABLE)));
             pizzaRepository.save(pizza);
         }
 

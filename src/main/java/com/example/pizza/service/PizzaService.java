@@ -14,5 +14,5 @@ public interface PizzaService {
 
     void delete(Integer id);
 
-    void blockingPizza(Integer id);
+    void blockPizzaById(Integer id);
 }

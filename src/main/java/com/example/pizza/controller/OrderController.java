@@ -53,8 +53,8 @@ public class OrderController {
 
     @GetMapping(value = "/order/checkOrderStatus/{id}")
     public ResponseEntity<String> checkOrderStatus(@PathVariable Integer id){
-        String string = orderService.checkOrderStatus(id);
-        return ResponseEntity.ok(string);
+        String order = orderService.checkOrderStatus(id);
+        return ResponseEntity.ok(order);
 
     }
 }

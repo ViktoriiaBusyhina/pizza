@@ -53,12 +53,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         orderRepository.deleteById(id);
 
     }
 
     @Override
+    @Transactional
     public String checkOrderStatus(Integer id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
         if (orderOptional.isPresent()) {
