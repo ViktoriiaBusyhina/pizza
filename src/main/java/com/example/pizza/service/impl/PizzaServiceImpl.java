@@ -1,10 +1,9 @@
 package com.example.pizza.service.impl;
 
-import com.example.pizza.entity.Customer;
+import com.example.pizza.enam.StatusPizza;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.repository.PizzaRepository;
 import com.example.pizza.service.PizzaService;
-import com.example.pizza.service.conventer.CustomerUpdateService;
 import com.example.pizza.service.conventer.PizzaUpdateService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ public class PizzaServiceImpl implements PizzaService {
 
     private final PizzaRepository pizzaRepository;
     private final PizzaUpdateService pizzaUpdateService;
+
     @Override
     public void createNewPizza(Pizza pizza) {
         pizzaRepository.save(pizza);
@@ -41,7 +41,6 @@ public class PizzaServiceImpl implements PizzaService {
     public Pizza update(Integer id, Pizza pizzaUpdate) {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
         if (pizzaOptional.isPresent()) {
-            Pizza pizza= pizzaOptional.get();
             Pizza existingPizza = pizzaOptional.get();
             Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
             pizzaRepository.save(updated);
@@ -50,9 +49,22 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) {
         pizzaRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public void blockPizzaById(Integer id) {
+        Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
+        if (pizzaOptional.isPresent()) {
+            Pizza pizza = pizzaOptional.get();
+            pizza.setStatus(StatusPizza.valueOf(String.valueOf(StatusPizza.UNAVAILABLE)));
+            pizzaRepository.save(pizza);
+        }
 
     }
+
+
+}
