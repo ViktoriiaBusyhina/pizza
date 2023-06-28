@@ -17,16 +17,16 @@ public class Customer {
     private Integer customerId;
 
     @Column(name = "name")
-    private Integer name;
+    private Integer Name;
 
     @Column(name = "address")
-    private Integer address;//
+    private Integer Address;
 
     @Column(name = "phone")
-    private Integer phone;
+    private Integer Phone;
 
     @Column(name = "email")
-    private Integer email;
+    private Integer Email;
 
 
 }

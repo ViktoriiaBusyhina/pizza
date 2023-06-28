@@ -1,6 +1,5 @@
 package com.example.pizza.entity;
 
-import com.example.pizza.enam.StatusPizza;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,8 +21,5 @@ public class Pizza {
 
     @Column(name = "size")
     private Integer size;
-
-    @Column(name = "status")
-    private StatusPizza status;
 
 }
