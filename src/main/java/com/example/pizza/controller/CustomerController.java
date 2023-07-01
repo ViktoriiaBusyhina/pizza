@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,20 +32,20 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/customer/find/{uuid}")
-    public ResponseEntity<Customer> findCustomerByUuid(@PathVariable UUID uuid) {
-        Customer customer = customerService.findById(uuid);
+    public ResponseEntity<Customer> findCustomerByUuid(@PathVariable Integer id) {
+        Customer customer = customerService.findById(id);
         return ResponseEntity.ok(customer);
     }
 
     @PutMapping(value = "/customer/update/{uuid}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable UUID uuid, @RequestBody Customer customer) {
-        Customer customerUpdate = customerService.update(uuid, customer);
+    public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody Customer customer) {
+        Customer customerUpdate = customerService.update(id, customer);
         return ResponseEntity.ok(customerUpdate);
     }
 
     @DeleteMapping(value = "/customer/delete/{uuid}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable UUID uuid) {
-        customerService.delete(uuid);
+    public ResponseEntity<String> deleteCustomer(@PathVariable Integer id) {
+        customerService.delete(id);
         return ResponseEntity.ok().build();
     }
 }
