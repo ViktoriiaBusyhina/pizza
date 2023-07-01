@@ -32,15 +32,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer findById(UUID uuid) {
-        Optional<Customer> customerOptional = customerRepository.findById(uuid);
+    public Customer findById(Integer id) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
         return customerOptional.orElse(null);
     }
 
     @Override
     @Transactional
-    public Customer update(UUID uuid, Customer customerUpdate) {
-        Optional<Customer> customerOptional = customerRepository.findById(uuid);
+    public Customer update(Integer id, Customer customerUpdate) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
         if (customerOptional.isPresent()) {
             Customer existingCustomer = customerOptional.get();
             Customer updated = customerUpdateService.convert(existingCustomer, customerUpdate);
@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void delete(UUID uuid) {
-        customerRepository.deleteById(uuid);
+    public void delete(Integer id) {
+        customerRepository.deleteById(id);
     }
 }
