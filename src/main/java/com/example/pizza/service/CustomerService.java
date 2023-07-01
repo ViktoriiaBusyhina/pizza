@@ -10,9 +10,9 @@ public interface CustomerService {
 
     List<Customer> findAll();
 
-    Customer findById(UUID uuid);
+    Customer findById(Integer id);
 
-    Customer update(UUID uuid, Customer customer);
+    Customer update(Integer id, Customer customer);
 
-    void delete(UUID uuid);
+    void delete(Integer id);
 }

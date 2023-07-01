@@ -1,6 +1,7 @@
 package com.example.pizza.entity;
 
 import com.example.pizza.enam.PaymentMethod;
+import com.example.pizza.enam.StatusOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,17 +11,20 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
 
-@Table(name = "customer")
+@Table(name = "order")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Customer {
+public class Order {
+    //статус
+    //способ оплаты
+    // стринг кастомер айди
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer customerId;
+    @Column(name = "order_id")
+    private Integer orderId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -30,24 +34,24 @@ public class Customer {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "customer_id")
+    private Integer customerId;
 
-    @Column(name = "address")
-    private String  address;//
+    @Column(name = "cafe_id")
+    private Integer cafeId;
 
-    @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "email")
-    private String email;
+    @Column(name = "pizza_id")
+    private Integer pizzaId;
 
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Column(name = "is_blocked")
-    private boolean isBlocked;
+    @Column(name = "status_order")
+    private StatusOrder statusOrder;
 
 
+//проверка для нового заказа, для блокировки пользователя
 
+
+    //енамы со статусами для оплаты, для статуса пицц
 }
