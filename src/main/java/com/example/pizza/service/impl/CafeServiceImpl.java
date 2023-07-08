@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class CafeServiceImpl implements CafeService {
@@ -29,15 +29,15 @@ public class CafeServiceImpl implements CafeService {
     }
 
     @Override
-    public Cafe findById(UUID uuid) {
-        Optional<Cafe> cafeOptional = cafeRepository.findById(uuid);
+    public Cafe findById(Integer id) {
+        Optional<Cafe> cafeOptional = cafeRepository.findById(id);
         return cafeOptional.orElse(null);
     }
 
     @Override
     @Transactional
-    public Cafe update(UUID uuid, Cafe cafeUpdate) {
-        Optional<Cafe> cafeOptional = cafeRepository.findById(uuid);
+    public Cafe update(Integer id, Cafe cafeUpdate) {
+        Optional<Cafe> cafeOptional = cafeRepository.findById(id);
         if (cafeOptional.isPresent()) {
             Cafe existingCafe = cafeOptional.get();
             Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
@@ -47,8 +47,8 @@ public class CafeServiceImpl implements CafeService {
     }
 
     @Override
-    public void delete(UUID uuid) {
-        cafeRepository.deleteById(uuid);
+    public void delete(Integer id) {
+        cafeRepository.deleteById(id);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.enam.OrderStatus;
+import com.example.pizza.enam.PaymentStatus;
 import com.example.pizza.entity.Customer;
 import com.example.pizza.entity.Order;
 import com.example.pizza.exception.OrderNotAllowedException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    private static final String EXCEPTION_MASSAGE = "Order is not allowed";
     private final OrderRepository orderRepository;
     private final OrderUpdateService orderUpdateService;
     private final CustomerService customerService;
@@ -28,12 +31,16 @@ public class OrderServiceImpl implements OrderService {
         if (isValidCustomer(customer)) {
             throw new IllegalArgumentException();
         }
-        if(customer.isBlocked()){
-            throw new OrderNotAllowedException( "мы вас больше не обслуживаем");// проверка на блокировку клиента
+        if (customer.isBlocked() || customer.getPaymentMethod() == null
+                || order.getPaymentStatus() == PaymentStatus.FAILED) { //поверкка на способность оплаты
+            throw new OrderNotAllowedException(EXCEPTION_MASSAGE);// проверка на блокировку клиента
         }
-        order.setPaymentMethod(customer.getPaymentMethod());//берем способ оплаты у клиента для заказа
+        if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
+            order.setPaymentMethod(customer.getPaymentMethod());//берем способ оплаты у клиента для заказа
+            order.setOrderStatus(OrderStatus.PROCESSING);
 
-        orderRepository.save(order);
+            orderRepository.save(order);
+        }
     }
 
     private boolean isValidCustomer(Customer customer) {
@@ -80,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> orderOptional = orderRepository.findById(id);
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
-            return order.getStatusOrder().name();
+            return order.getOrderStatus().name();
         }
         return "no status";
 

@@ -8,7 +8,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
-
+/**
+ * The Cafe class represents a cafe entity.
+ */
 @Table(name = "cafe")
 @Data
 @AllArgsConstructor

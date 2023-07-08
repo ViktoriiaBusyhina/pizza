@@ -1,6 +1,6 @@
 package com.example.pizza.service.impl;
 
-import com.example.pizza.enam.StatusPizza;
+import com.example.pizza.enam.PizzaStatus;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.repository.PizzaRepository;
 import com.example.pizza.service.PizzaService;
@@ -60,10 +60,9 @@ public class PizzaServiceImpl implements PizzaService {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
         if (pizzaOptional.isPresent()) {
             Pizza pizza = pizzaOptional.get();
-            pizza.setStatus(StatusPizza.valueOf(String.valueOf(StatusPizza.UNAVAILABLE)));
+            pizza.setStatus(PizzaStatus.valueOf(String.valueOf(PizzaStatus.UNAVAILABLE)));
             pizzaRepository.save(pizza);
         }
-
     }
 
 

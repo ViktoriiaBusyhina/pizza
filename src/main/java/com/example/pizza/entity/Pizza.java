@@ -1,6 +1,6 @@
 package com.example.pizza.entity;
 
-import com.example.pizza.enam.StatusPizza;
+import com.example.pizza.enam.PizzaStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigInteger;
 import java.security.Timestamp;
-
+/**
+ * The Pizza class represents a pizza entity.
+ */
 @Table(name = "pizza")
 @Data
 @AllArgsConstructor
@@ -36,6 +39,14 @@ public class Pizza {
     private Integer size;
 
     @Column(name = "status")
-    private StatusPizza status;
+    private PizzaStatus status;
 
+    @Column(name = "order_id")
+    private Integer OrderId;
+
+    @Column(name = "cafe_id")
+    private Integer CafeId;
+
+    @Column(name = "price")
+    private BigInteger price;
 }
