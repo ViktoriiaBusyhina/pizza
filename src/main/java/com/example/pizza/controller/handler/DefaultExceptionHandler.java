@@ -1,4 +1,5 @@
 package com.example.pizza.controller.handler;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.exception.OrderNotAllowedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,12 @@ public class DefaultExceptionHandler {
     @ExceptionHandler({OrderNotAllowedException.class, IllegalArgumentException.class})
     public ResponseEntity<String> handleException(Exception exception) {
         log.info("Error: " + exception);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<String> handleDataNotFoundException(Exception exception) {
+        log.info("Error: " + exception);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

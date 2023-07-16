@@ -99,12 +99,13 @@ public class PizzaController {
     /**
      * Places an order for a pizza with the specified ID.
      *
-     * @param id the ID of the pizza to order
+     * @param customerId the ID of the customer
+     * @param pizza      the pizza to order
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
-    @PostMapping(value = "/pizza/order/{id}")
-    public ResponseEntity<String> orderPizza(@PathVariable Integer id) {
-        // TODO document why this method is empty
+    @PostMapping(value = "/pizza/order/customer-id/{customerId}")
+    public ResponseEntity<String> orderPizza(@PathVariable Integer customerId, @RequestBody Pizza pizza) {
+        pizzaService.orderNewPizza(customerId, pizza);
         return ResponseEntity.ok().build();
     }
 }

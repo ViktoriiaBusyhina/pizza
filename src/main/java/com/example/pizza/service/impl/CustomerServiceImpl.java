@@ -1,6 +1,7 @@
 package com.example.pizza.service.impl;
 
 import com.example.pizza.entity.Customer;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CustomerRepository;
 import com.example.pizza.service.CustomerService;
 import com.example.pizza.service.conventer.CustomerUpdateService;
@@ -32,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Customer findById(Integer id) {
         Optional<Customer> customerOptional = customerRepository.findById(id);
-        return customerOptional.orElse(null);
+        return customerOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
             Customer updated = customerUpdateService.convert(existingCustomer, customerUpdate);
             customerRepository.save(updated);
         }
-        return customerOptional.orElse(null);
+        return customerOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override

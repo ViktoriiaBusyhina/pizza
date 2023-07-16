@@ -4,6 +4,7 @@ import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PaymentStatus;
 import com.example.pizza.entity.Customer;
 import com.example.pizza.entity.Order;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.exception.OrderNotAllowedException;
 import com.example.pizza.repository.OrderRepository;
 import com.example.pizza.service.CustomerService;
@@ -28,11 +29,10 @@ public class OrderServiceImpl implements OrderService {
     public void createNewOrder(Order order) {
         Integer customerId = order.getCustomerId();
         Customer customer = customerService.findById(customerId);
-        if (isValidCustomer(customer)) {
+        if (!isValidCustomer(customer)) {
             throw new IllegalArgumentException();
         }
-        if (customer.isBlocked() || customer.getPaymentMethod() == null
-                || order.getPaymentStatus() == PaymentStatus.FAILED) { //поверкка на способность оплаты
+        if (isOrderAllowed(order, customer)) { //поверкка на способность оплаты
             throw new OrderNotAllowedException(EXCEPTION_MASSAGE);// проверка на блокировку клиента
         }
         if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
@@ -41,6 +41,11 @@ public class OrderServiceImpl implements OrderService {
 
             orderRepository.save(order);
         }
+    }
+
+    private boolean isOrderAllowed(Order order, Customer customer) {
+        return customer.isBlocked() || customer.getPaymentMethod() == null
+                || order.getPaymentStatus() == PaymentStatus.FAILED;
     }
 
     private boolean isValidCustomer(Customer customer) {
@@ -52,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(Integer id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
-        return orderOptional.orElse(null);
+        return orderOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override
@@ -69,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
             Order updated = orderUpdateService.convert(existingOrder, orderUpdate);
             orderRepository.save(updated);
         }
-        return orderOptional.orElse(null);
+        return orderOptional.orElseThrow(() -> new DataNotFoundException());
 
 
     }
@@ -90,8 +95,6 @@ public class OrderServiceImpl implements OrderService {
             return order.getOrderStatus().name();
         }
         return "no status";
-
-
     }
 }
 

@@ -1,5 +1,7 @@
 package com.example.pizza.entity;
 
+import com.example.pizza.enam.PizzaName;
+import com.example.pizza.enam.PizzaSize;
 import com.example.pizza.enam.PizzaStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,8 +23,8 @@ import java.security.Timestamp;
 public class Pizza {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pizza_id")
-    private Integer pizzaId;
+    @Column(name = "id")
+    private Integer id;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -33,19 +35,25 @@ public class Pizza {
     private Timestamp updatedAt;
 
     @Column(name = "pizza_name")
-    private String  pizzaName;
+    @Enumerated(EnumType.STRING)
+    private PizzaName pizzaName;
 
     @Column(name = "size")
-    private Integer size;
+    @Enumerated(EnumType.STRING)
+    private PizzaSize size;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private PizzaStatus status;
 
     @Column(name = "order_id")
-    private Integer OrderId;
+    private Integer orderId;
 
     @Column(name = "cafe_id")
-    private Integer CafeId;
+    private Integer cafeId;
 
     @Column(name = "price")
     private BigInteger price;

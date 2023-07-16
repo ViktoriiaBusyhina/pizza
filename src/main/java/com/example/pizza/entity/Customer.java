@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
 /**
@@ -22,13 +21,13 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer customerId;
+    private Integer id;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @UpdateTimestamp
+    @CreationTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
@@ -36,7 +35,7 @@ public class Customer {
     private String name;
 
     @Column(name = "address")
-    private String  address;//
+    private String  address;
 
     @Column(name = "phone")
     private String phone;
@@ -45,6 +44,7 @@ public class Customer {
     private String email;
 
     @Column(name = "payment_method")
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Column(name = "is_blocked")

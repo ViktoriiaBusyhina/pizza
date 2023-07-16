@@ -1,6 +1,7 @@
 package com.example.pizza.service.impl;
 
 import com.example.pizza.entity.Cafe;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CafeRepository;
 import com.example.pizza.service.CafeService;
 import com.example.pizza.service.conventer.CafeUpdateService;
@@ -31,7 +32,7 @@ public class CafeServiceImpl implements CafeService {
     @Override
     public Cafe findById(Integer id) {
         Optional<Cafe> cafeOptional = cafeRepository.findById(id);
-        return cafeOptional.orElse(null);
+        return cafeOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override
@@ -43,7 +44,7 @@ public class CafeServiceImpl implements CafeService {
             Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
             cafeRepository.save(updated);
         }
-        return cafeOptional.orElse(null);
+        return cafeOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override

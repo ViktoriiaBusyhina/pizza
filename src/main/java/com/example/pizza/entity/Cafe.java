@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
 /**
@@ -20,13 +19,13 @@ public class Cafe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cafe_id")
-    private Integer cafeId;
+    private Integer Id;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @UpdateTimestamp
+    @CreationTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 

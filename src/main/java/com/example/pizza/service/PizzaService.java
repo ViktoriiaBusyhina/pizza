@@ -1,5 +1,6 @@
 package com.example.pizza.service;
 
+import com.example.pizza.enam.PizzaName;
 import com.example.pizza.entity.Pizza;
 
 import java.util.List;
@@ -53,4 +54,6 @@ public interface PizzaService {
      * @param id the ID of the pizza to block
      */
     void blockPizzaById(Integer id);
+
+    void orderNewPizza(Integer customerId, Pizza pizza);
 }
