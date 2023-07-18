@@ -1,6 +1,7 @@
 package com.example.pizza.service.impl;
 
 import com.example.pizza.entity.Customer;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CustomerRepository;
 import com.example.pizza.service.CustomerService;
 import com.example.pizza.service.conventer.CustomerUpdateService;
@@ -10,12 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
-
 
     private final CustomerRepository customerRepository;
     private final CustomerUpdateService customerUpdateService;
@@ -32,25 +31,26 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer findById(UUID uuid) {
-        Optional<Customer> customerOptional = customerRepository.findById(uuid);
-        return customerOptional.orElse(null);
+    public Customer findById(Integer id) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        return customerOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override
     @Transactional
-    public Customer update(UUID uuid, Customer customerUpdate) {
-        Optional<Customer> customerOptional = customerRepository.findById(uuid);
+    public Customer update(Integer id, Customer customerUpdate) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
         if (customerOptional.isPresent()) {
             Customer existingCustomer = customerOptional.get();
             Customer updated = customerUpdateService.convert(existingCustomer, customerUpdate);
             customerRepository.save(updated);
+            return updated;
         }
-        return customerOptional.orElse(null);
+        throw new DataNotFoundException();
     }
 
     @Override
-    public void delete(UUID uuid) {
-        customerRepository.deleteById(uuid);
+    public void delete(Integer id) {
+        customerRepository.deleteById(id);
     }
 }

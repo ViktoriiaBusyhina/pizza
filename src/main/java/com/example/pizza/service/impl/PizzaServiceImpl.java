@@ -1,8 +1,12 @@
 package com.example.pizza.service.impl;
 
-import com.example.pizza.enam.StatusPizza;
+import com.example.pizza.enam.OrderStatus;
+import com.example.pizza.enam.PizzaStatus;
+import com.example.pizza.entity.Order;
 import com.example.pizza.entity.Pizza;
+import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.PizzaRepository;
+import com.example.pizza.service.OrderService;
 import com.example.pizza.service.PizzaService;
 import com.example.pizza.service.conventer.PizzaUpdateService;
 import jakarta.transaction.Transactional;
@@ -19,6 +23,7 @@ public class PizzaServiceImpl implements PizzaService {
 
     private final PizzaRepository pizzaRepository;
     private final PizzaUpdateService pizzaUpdateService;
+    private final OrderService orderService;
 
     @Override
     public void createNewPizza(Pizza pizza) {
@@ -33,7 +38,7 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     public Pizza findById(Integer id) {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
-        return pizzaOptional.orElse(null);
+        return pizzaOptional.orElseThrow(() -> new DataNotFoundException());
     }
 
     @Override
@@ -44,8 +49,9 @@ public class PizzaServiceImpl implements PizzaService {
             Pizza existingPizza = pizzaOptional.get();
             Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
             pizzaRepository.save(updated);
+            return updated;
         }
-        return pizzaOptional.orElse(null);
+        throw new DataNotFoundException();
     }
 
     @Override
@@ -60,11 +66,21 @@ public class PizzaServiceImpl implements PizzaService {
         Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
         if (pizzaOptional.isPresent()) {
             Pizza pizza = pizzaOptional.get();
-            pizza.setStatus(StatusPizza.valueOf(String.valueOf(StatusPizza.UNAVAILABLE)));
+            pizza.setStatus(PizzaStatus.valueOf(String.valueOf(PizzaStatus.UNAVAILABLE)));
             pizzaRepository.save(pizza);
         }
-
     }
+    @Override
+    @Transactional
+    public void orderNewPizza(Integer customerId, Pizza pizza) { //делаем заказ пиццы по айди клиента
+        Order order = new Order();
+        order.setCustomerId(customerId); //присваеваем айди клиента
+        order.setOrderStatus(OrderStatus.PROCESSING); //устанавливаем статус "в процессе"
+//        order.setCafeId();
+        orderService.createNewOrder(order); //сохраняем его в баззу данных
 
-
+        pizza.setOrderId(order.getId()); //добавляем для пиццы номер заказа
+//        pizza.setCafeId();
+        pizzaRepository.save(pizza);
+    }
 }

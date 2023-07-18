@@ -4,13 +4,14 @@ import com.example.pizza.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
-
+/**
+ * The CustomerRepository interface provides database operations for the Customer entity.
+ * It extends the JpaRepository interface, providing generic CRUD methods for Customer entities.
+ */
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, UUID> {
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-   // List<Customer> findCustomerByStatusIs(Integer status);
+    // List<Customer> findCustomerByStatusIs(Integer status);
 
 }
 

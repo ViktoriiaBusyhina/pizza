@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.security.Timestamp;
+/**
+ * The Cafe class represents a cafe entity.
+ */
 @Table(name = "cafe")
 @Data
 @AllArgsConstructor
@@ -14,7 +19,15 @@ public class Cafe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cafe_id")
-    private Integer cafeId;
+    private Integer Id;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
+
+    @CreationTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
 
     @Column(name = "pizza_id")
     private Integer pizzaId;
