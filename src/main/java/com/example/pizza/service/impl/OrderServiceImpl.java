@@ -19,10 +19,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private static final String EXCEPTION_MASSAGE = "Order is not allowed";
+    private static final String EXCEPTION_MESSAGE = "Order is not allowed";
     private final OrderRepository orderRepository;
     private final OrderUpdateService orderUpdateService;
     private final CustomerService customerService;
+    private static final String noStatus = "no status";
 
     @Override
     @Transactional  //проверка на заполнения полей от клиента, и проверка способа оплаты
@@ -33,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException();
         }
         if (isOrderAllowed(order, customer)) { //поверкка на способность оплаты
-            throw new OrderNotAllowedException(EXCEPTION_MASSAGE);// проверка на блокировку клиента
+            throw new OrderNotAllowedException(EXCEPTION_MESSAGE);// проверка на блокировку клиента
         }
         if (order.getPaymentStatus() == PaymentStatus.SUCCESSFUL) {
             order.setPaymentMethod(customer.getPaymentMethod());//берем способ оплаты у клиента для заказа
@@ -73,8 +74,9 @@ public class OrderServiceImpl implements OrderService {
             Order existingOrder = orderOptional.get();
             Order updated = orderUpdateService.convert(existingOrder, orderUpdate);
             orderRepository.save(updated);
+            return updated;
         }
-        return orderOptional.orElseThrow(() -> new DataNotFoundException());
+        throw new DataNotFoundException();
 
 
     }
@@ -94,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderOptional.get();
             return order.getOrderStatus().name();
         }
-        return "no status";
+        return noStatus;
     }
 }
 

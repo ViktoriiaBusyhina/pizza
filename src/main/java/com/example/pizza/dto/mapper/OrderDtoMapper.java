@@ -1,13 +1,13 @@
 package com.example.pizza.dto.mapper;
 
 import com.example.pizza.dto.OrderDto;
-import com.example.pizza.dto.PizzaDto;
 import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PaymentMethod;
 import com.example.pizza.entity.Order;
-import com.example.pizza.entity.Pizza;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
     public Order dtoToEntity(OrderDto orderDto){
         Order order = new Order();

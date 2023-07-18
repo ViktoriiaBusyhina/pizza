@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,27 +74,46 @@ class CafeServiceImplTest {
     }
 
     @Test
-    void findById_throwsException() {
+    void findById_throwsException_ok() {
         Integer id = 1;
         assertThrows(DataNotFoundException.class, () -> cafeService.findById(id));
     }
 
     @Test
-    void update() {
-        // given
-        // when
-        // then
+    void update_ok() {
+        // Arrange
+        Integer id = 1;
+        Cafe existingCafe = new Cafe();
+        Cafe updatedCafe = new Cafe();
+
+        when(cafeRepository.findById(id)).thenReturn(Optional.of(existingCafe));
+        when(cafeUpdateService.convert(existingCafe, updatedCafe)).thenReturn(updatedCafe);
+        when(cafeRepository.save(updatedCafe)).thenReturn(updatedCafe);
+
+        // Act
+        Cafe result = cafeService.update(id, updatedCafe);
+
+        // Assert
+        assertEquals(updatedCafe, result);
+        verify(cafeRepository, times(1)).save(updatedCafe);
     }
 
     @Test
-    void delete() {
-        // given
-        // when
-        // then
+    void update_NonExistingId_ShouldThrowDataNotFoundException_ok() {
+        // Arrange
+        Integer id = 1;
+        Cafe updatedCafe = new Cafe();
+
+        when(cafeRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(DataNotFoundException.class, () -> cafeService.update(id, updatedCafe));
+        verify(cafeRepository, never()).save(updatedCafe);
     }
 
+
     @Test
-    void delete_ShouldDeleteCafe() {
+    void delete_ShouldDeleteCafe_ok() {
         // Arrange
         Integer id = 1;
 

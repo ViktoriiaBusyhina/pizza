@@ -44,8 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
             Customer existingCustomer = customerOptional.get();
             Customer updated = customerUpdateService.convert(existingCustomer, customerUpdate);
             customerRepository.save(updated);
+            return updated;
         }
-        return customerOptional.orElseThrow(() -> new DataNotFoundException());
+        throw new DataNotFoundException();
     }
 
     @Override

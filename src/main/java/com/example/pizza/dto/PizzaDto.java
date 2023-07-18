@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 /**
  * The PizzaDto class represents a data transfer object for a pizza.
@@ -20,5 +20,5 @@ public class PizzaDto {
     private String status;
     private Integer orderId;
     private Integer cafeId;
-    private BigInteger price;
+    private BigDecimal price;
 }

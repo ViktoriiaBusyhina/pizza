@@ -6,7 +6,7 @@ public enum PizzaName {
 
     CILLI,
     HAWAII,
-    MARGARITA,
+    MARGHERITA,
     CALZONE,
     ROMANA,
     SICILIANA,

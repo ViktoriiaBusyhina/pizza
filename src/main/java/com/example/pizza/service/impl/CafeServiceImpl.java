@@ -43,8 +43,9 @@ public class CafeServiceImpl implements CafeService {
             Cafe existingCafe = cafeOptional.get();
             Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
             cafeRepository.save(updated);
+            return updated;
         }
-        return cafeOptional.orElseThrow(() -> new DataNotFoundException());
+        throw new DataNotFoundException();
     }
 
     @Override

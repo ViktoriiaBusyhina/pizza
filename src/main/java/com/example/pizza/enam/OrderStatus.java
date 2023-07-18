@@ -5,23 +5,8 @@ package com.example.pizza.enam;
  */
 public enum OrderStatus {
 
-    /**
-     * Order status: Processing.
-     */
     PROCESSING,
-
-    /**
-     * Order status: Cooking.
-     */
     COOKING,
-
-    /**
-     * Order status: Canceled.
-     */
     CANCELED,
-
-    /**
-     * Order status: In delivery.
-     */
     IN_DELIVERY
 }

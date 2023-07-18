@@ -56,7 +56,7 @@ public class CafeController {
      * @return a ResponseEntity containing the retrieved cafe
      */
     @GetMapping(value = "/cafe/find/{id}")
-    public ResponseEntity<Cafe> findCafeByUuid(@PathVariable Integer id) {
+    public ResponseEntity<Cafe> findCafeById(@PathVariable Integer id) {
         Cafe cafe = cafeService.findById(id);
         return ResponseEntity.ok(cafe);
     }
@@ -71,7 +71,7 @@ public class CafeController {
     @PutMapping(value = "/cafe/update/{id}")
     public ResponseEntity<Cafe> updateCafe(@PathVariable Integer id, @RequestBody Cafe cafe) {
         Cafe cafeUpdate = cafeService.update(id, cafe);
-        return ResponseEntity.ok(cafeUpdate);
+        return cafeUpdate != null ? ResponseEntity.ok(cafeUpdate) : ResponseEntity.notFound().build();
     }
 
     /**

@@ -49,8 +49,9 @@ public class PizzaServiceImpl implements PizzaService {
             Pizza existingPizza = pizzaOptional.get();
             Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
             pizzaRepository.save(updated);
+            return updated;
         }
-        return pizzaOptional.orElseThrow(() -> new DataNotFoundException());
+        throw new DataNotFoundException();
     }
 
     @Override
