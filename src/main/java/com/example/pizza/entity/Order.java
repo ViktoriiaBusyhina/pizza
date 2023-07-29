@@ -8,7 +8,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 /**
  * The Order class represents an order entity.
  */

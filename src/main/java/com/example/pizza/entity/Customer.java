@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 /**
  * The Customer class represents a customer entity.
  */
@@ -27,7 +28,7 @@ public class Customer {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
@@ -47,9 +48,9 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "is_blocked")
+    @Column(name = "is_blocked",columnDefinition = "boolean default false")
     private boolean isBlocked;
 
-
-
+    @Transient
+    private String password;
 }

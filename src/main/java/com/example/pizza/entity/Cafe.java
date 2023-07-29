@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 /**
  * The Cafe class represents a cafe entity.
  */
@@ -25,7 +26,7 @@ public class Cafe {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
