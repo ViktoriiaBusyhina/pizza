@@ -32,61 +32,28 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    //@Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-
-
-
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles(String.valueOf(USER))
-                .build();
-
-        UserDetails admin = User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("password")
-                .roles(String.valueOf(ADMIN))
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/v3/api-docs/**").permitAll();
+                    auth.requestMatchers("/swagger-ui/**").permitAll();
+                    auth.requestMatchers("/swagger-ui.html").permitAll();
+
                     auth.requestMatchers("/registration").permitAll();
-                    auth.requestMatchers("/new-cafe").hasRole(ADMIN.name());
-                    auth.requestMatchers("/cafe/find/all").hasRole(ADMIN.name());
-                    auth.requestMatchers("/cafe/find/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/cafe/update/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/cafe/delete/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/new-customer").hasRole(ADMIN.name());
-                    auth.requestMatchers("/customer/find/all").hasRole(ADMIN.name());
-                    auth.requestMatchers("/customer/find/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/customer/update/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/customer/delete/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/new-order").hasRole(ADMIN.name());
-                    auth.requestMatchers("/order/find/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/order/find/all").hasRole(ADMIN.name());
-                    auth.requestMatchers("/order/update/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/order/checkOrderStatus/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/order/delete/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/new-pizza").hasRole(ADMIN.name());
-                    auth.requestMatchers("/pizza/find/all").hasRole(ADMIN.name());
-                    auth.requestMatchers("/pizza/find/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/pizza/update/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/pizza/delete/{id}").hasRole(ADMIN.name());
-                    auth.requestMatchers("/pizza/block_pizza/{id}").hasRole(ADMIN.name());
+
                     auth.requestMatchers("/new-order").hasRole(Roles.USER.name());
                     auth.requestMatchers("/order/checkOrderStatus/{id}").hasRole(Roles.USER.name());
                     auth.requestMatchers("/pizza/find/all").hasRole(Roles.USER.name());
+
+                    auth.requestMatchers("/**").hasRole(ADMIN.name());
 
                 })
 //                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .build();
+
     }
 }
