@@ -52,7 +52,7 @@ public class CustomerController {
      * @return a ResponseEntity containing the retrieved customer
      */
     @GetMapping(value = "/customer/find/{id}")
-    public ResponseEntity<Customer> findCustomerByUuid(@PathVariable Integer id) {
+    public ResponseEntity<Customer> findCustomerById(@PathVariable Integer id) {
         Customer customer = customerService.findById(id);
         return ResponseEntity.ok(customer);
     }
@@ -62,12 +62,12 @@ public class CustomerController {
      *
      * @param id       the ID of the customer to update
      * @param customer the updated customer object
-     * @return a ResponseEntity containing the updated customer
+     * @return a ResponseEntity with the updated customer or HTTP status 404 if the customer is not found
      */
     @PutMapping(value = "/customer/update/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody Customer customer) {
         Customer customerUpdate = customerService.update(id, customer);
-        return ResponseEntity.ok(customerUpdate);
+        return customerUpdate != null ? ResponseEntity.ok(customerUpdate) : ResponseEntity.notFound().build();
     }
 
     /**

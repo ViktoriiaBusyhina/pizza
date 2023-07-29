@@ -3,9 +3,18 @@ package com.example.pizza.dto.mapper;
 import com.example.pizza.dto.CafeDto;
 import com.example.pizza.entity.Cafe;
 import org.springframework.stereotype.Component;
+/**
+ * The CafeDtoMapper class is a component that maps between Cafe and CafeDto objects.
+ */
 @Component
 public class CafeDtoMapper implements DtoMapper<Cafe, CafeDto> {
 
+    /**
+     * Converts a CafeDto object to a Cafe entity.
+     *
+     * @param cafeDto the CafeDto object to convert
+     * @return the converted Cafe entity
+     */
     public Cafe dtoToEntity(CafeDto cafeDto) {
         Cafe cafe = new Cafe();
         cafe.setId(cafeDto.getId());
@@ -17,6 +26,12 @@ public class CafeDtoMapper implements DtoMapper<Cafe, CafeDto> {
         return cafe;
     }
 
+    /**
+     * Converts a Cafe entity to a CafeDto object.
+     *
+     * @param cafe the Cafe entity to convert
+     * @return the converted CafeDto object
+     */
     public CafeDto entityToDto(Cafe cafe) {
         CafeDto cafeDto = new CafeDto();
         cafeDto.setId(cafe.getId());

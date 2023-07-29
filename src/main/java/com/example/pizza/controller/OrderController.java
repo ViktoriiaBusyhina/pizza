@@ -63,12 +63,12 @@ public class OrderController {
      *
      * @param id    the ID of the order to update
      * @param order the updated order object
-     * @return a ResponseEntity containing the updated order
+     * @return a ResponseEntity with the updated order or HTTP status 404 if the order is not found
      */
     @PutMapping(value = "/order/update/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
         Order orderUpdate = orderService.update(id, order);
-        return ResponseEntity.ok(orderUpdate);
+        return orderUpdate != null ? ResponseEntity.ok(orderUpdate) : ResponseEntity.notFound().build();
     }
 
     /**

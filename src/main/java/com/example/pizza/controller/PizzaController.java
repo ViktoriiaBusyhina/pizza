@@ -64,12 +64,12 @@ public class PizzaController {
      *
      * @param id    the ID of the pizza to update
      * @param pizza the updated pizza object
-     * @return a ResponseEntity containing the updated pizza
+     * @return a ResponseEntity with the updated pizza or HTTP status 404 if the pizza is not found
      */
     @PutMapping(value = "/pizza/update/{id}")
     public ResponseEntity<Pizza> updatePizza(@PathVariable Integer id, @RequestBody Pizza pizza) {
         Pizza pizzaUpdate = pizzaService.update(id, pizza);
-        return ResponseEntity.ok(pizzaUpdate);
+        return pizzaUpdate != null ? ResponseEntity.ok(pizzaUpdate) : ResponseEntity.notFound().build();
     }
 
     /**

@@ -6,10 +6,17 @@ import com.example.pizza.enam.PizzaSize;
 import com.example.pizza.enam.PizzaStatus;
 import com.example.pizza.entity.Pizza;
 import org.springframework.stereotype.Component;
-
+/**
+ * The OrderDtoMapper class is a component that maps between Order and OrderDto objects.
+ */
 @Component
 public class PizzaDtoMapper implements DtoMapper<Pizza, PizzaDto> {
-
+    /**
+     * Converts an OrderDto object to an Order entity.
+     *
+     * @param orderDto the OrderDto object to convert
+     * @return the converted Order entity
+     */
     public Pizza dtoToEntity(PizzaDto pizzaDto) {
         Pizza pizza = new Pizza();
         pizza.setId(pizzaDto.getId());
@@ -22,7 +29,12 @@ public class PizzaDtoMapper implements DtoMapper<Pizza, PizzaDto> {
         pizza.setPrice(pizzaDto.getPrice());
         return pizza;
     }
-
+    /**
+     * Converts an Order entity to an OrderDto object.
+     *
+     * @param order the Order entity to convert
+     * @return the converted OrderDto object
+     */
     public PizzaDto entityToDto(Pizza pizza) {
         PizzaDto pizzaDto = new PizzaDto();
         pizzaDto.setId(pizza.getId());

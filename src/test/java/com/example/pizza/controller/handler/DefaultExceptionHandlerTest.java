@@ -14,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+/**
+ * The DefaultExceptionHandlerTest class is a unit test class for DefaultExceptionHandler.
+ * <p>
+ * It tests the exception handling methods in DefaultExceptionHandler.
+ */
 @ExtendWith(MockitoExtension.class)
 class DefaultExceptionHandlerTest {
 
@@ -23,41 +28,56 @@ class DefaultExceptionHandlerTest {
     @InjectMocks
     DefaultExceptionHandler exceptionHandler;
 
+    /**
+     * Tests the handleException method for handling OrderNotAllowedException.
+     * <p>
+     * It asserts that a ResponseEntity with status code HttpStatus.BAD_REQUEST is returned.
+     */
     @Test
     void handleException_OrderNotAllowedException_ShouldReturnBadRequest_ok() {
-        // Arrange
+// Arrange
         OrderNotAllowedException orderNotAllowedException = new OrderNotAllowedException("Order not allowed");
 
-        // Act
+// Act
         ResponseEntity<String> response = exceptionHandler.handleException(orderNotAllowedException);
 
-        // Assert
+// Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(exception, never()).getMessage();
     }
 
+    /**
+     * Tests the handleException method for handling IllegalArgumentException.
+     * <p>
+     * It asserts that a ResponseEntity with status code HttpStatus.BAD_REQUEST is returned.
+     */
     @Test
     void handleException_IllegalArgumentException_ShouldReturnBadRequest_ok() {
-        // Arrange
+// Arrange
         IllegalArgumentException illegalArgumentException = new IllegalArgumentException();
 
-        // Act
+// Act
         ResponseEntity<String> response = exceptionHandler.handleException(illegalArgumentException);
 
-        // Assert
+// Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(exception, never()).getMessage();
     }
 
+    /**
+     * Tests the handleDataNotFoundException method.
+     * <p>
+     * It asserts that a ResponseEntity with status code HttpStatus.NOT_FOUND is returned.
+     */
     @Test
     void handleDataNotFoundException_ShouldReturnNotFound_ok() {
-        // Arrange
+// Arrange
         DataNotFoundException dataNotFoundException = new DataNotFoundException();
 
-        // Act
+// Act
         ResponseEntity<String> response = exceptionHandler.handleDataNotFoundException(dataNotFoundException);
 
-        // Assert
+// Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(exception, never()).getMessage();
     }

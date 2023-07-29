@@ -66,7 +66,7 @@ public class CafeController {
      *
      * @param id   the ID of the cafe to update
      * @param cafe the updated cafe object
-     * @return a ResponseEntity containing the updated cafe
+     * @return a ResponseEntity with the updated cafe or HTTP status 404 if the cafe is not found
      */
     @PutMapping(value = "/cafe/update/{id}")
     public ResponseEntity<Cafe> updateCafe(@PathVariable Integer id, @RequestBody Cafe cafe) {
