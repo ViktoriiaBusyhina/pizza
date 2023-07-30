@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CafeDto {
-    private Integer Id;
     private Integer pizzaId;
     private String name;
     private String address;

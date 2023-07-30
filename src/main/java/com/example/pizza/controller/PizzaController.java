@@ -1,6 +1,6 @@
 package com.example.pizza.controller;
 
-import com.example.pizza.entity.Pizza;
+import com.example.pizza.dto.PizzaDto;
 import com.example.pizza.service.PizzaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class PizzaController {
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
     @PostMapping(value = "/new-pizza")
-    public ResponseEntity<Pizza> createNewPizza(@RequestBody Pizza pizza) {
+    public ResponseEntity<PizzaDto> createNewPizza(@RequestBody PizzaDto pizza) {
         pizzaService.createNewPizza(pizza);
         return ResponseEntity.ok().build();
     }
@@ -38,8 +38,8 @@ public class PizzaController {
      * @return a ResponseEntity containing the list of pizzas or indicating no content
      */
     @GetMapping(value = "/pizza/find/all")
-    public ResponseEntity<List<Pizza>> findAllPizzas() {
-        List<Pizza> pizzaList = pizzaService.findAll();
+    public ResponseEntity<List<PizzaDto>> findAllPizzas() {
+        List<PizzaDto> pizzaList = pizzaService.findAll();
         if (pizzaList != null && !pizzaList.isEmpty()) {
             return ResponseEntity.ok(pizzaList);
         } else {
@@ -54,8 +54,8 @@ public class PizzaController {
      * @return a ResponseEntity containing the retrieved pizza
      */
     @GetMapping(value = "/pizza/find/{id}")
-    public ResponseEntity<Pizza> findPizzaById(@PathVariable Integer id) {
-        Pizza pizza = pizzaService.findById(id);
+    public ResponseEntity<PizzaDto> findPizzaById(@PathVariable Integer id) {
+        PizzaDto pizza = pizzaService.findById(id);
         return ResponseEntity.ok(pizza);
     }
 
@@ -67,9 +67,9 @@ public class PizzaController {
      * @return a ResponseEntity with the updated pizza or HTTP status 404 if the pizza is not found
      */
     @PutMapping(value = "/pizza/update/{id}")
-    public ResponseEntity<Pizza> updatePizza(@PathVariable Integer id, @RequestBody Pizza pizza) {
-        Pizza pizzaUpdate = pizzaService.update(id, pizza);
-        return pizzaUpdate != null ? ResponseEntity.ok(pizzaUpdate) : ResponseEntity.notFound().build();
+    public ResponseEntity<PizzaDto> updatePizza(@PathVariable Integer id, @RequestBody PizzaDto pizza) {
+        pizzaService.update(id, pizza);
+        return ResponseEntity.ok(pizza);
     }
 
     /**
@@ -104,7 +104,7 @@ public class PizzaController {
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
     @PostMapping(value = "/pizza/order/customer-id/{customerId}")
-    public ResponseEntity<String> orderPizza(@PathVariable Integer customerId, @RequestBody Pizza pizza) {
+    public ResponseEntity<String> orderPizza(@PathVariable Integer customerId, @RequestBody PizzaDto pizza) {
         pizzaService.orderNewPizza(customerId, pizza);
         return ResponseEntity.ok().build();
     }

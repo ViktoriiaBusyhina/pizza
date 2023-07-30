@@ -6,33 +6,48 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
 import static com.example.pizza.enam.Roles.ADMIN;
-import static com.example.pizza.enam.Roles.USER;
 
+/**
+ * Configuration class for web security using Spring Security.
+ * This class defines security settings and access control for various endpoints.
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
+    /**
+     * Creates a bean for the JdbcUserDetailsManager using the provided DataSource.
+     *
+     * @param dataSource The DataSource used for user details management.
+     * @return JdbcUserDetailsManager instance for user authentication and management.
+     */
     @Bean
     public JdbcUserDetailsManager userDetailsManager(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
-
+    /**
+     * Creates a bean for the BCryptPasswordEncoder for password encoding.
+     *
+     * @return BCryptPasswordEncoder instance for password encoding and decoding.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    /**
+     * Configures the security filter chain for the HTTP requests.
+     *
+     * @param http The HttpSecurity instance to be customized.
+     * @return SecurityFilterChain instance with the configured access rules.
+     * @throws Exception if an error occurs during the configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http

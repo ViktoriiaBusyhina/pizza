@@ -21,7 +21,6 @@ class PizzaDtoMapperTest {
     void dtoToEntity_ShouldMapDtoToEntity_ok() {
         // Arrange
         PizzaDto pizzaDto = new PizzaDto();
-        pizzaDto.setId(1);
         pizzaDto.setPizzaName("MARGHERITA");
         pizzaDto.setSize("NORMAL");
         pizzaDto.setQuantity(2);
@@ -34,7 +33,6 @@ class PizzaDtoMapperTest {
         Pizza result = pizzaDtoMapper.dtoToEntity(pizzaDto);
 
         // Assert
-        assertEquals(pizzaDto.getId(), result.getId());
         assertEquals(PizzaName.MARGHERITA, result.getPizzaName());
         assertEquals(PizzaSize.NORMAL, result.getSize());
         assertEquals(pizzaDto.getQuantity(), result.getQuantity());
@@ -48,7 +46,6 @@ class PizzaDtoMapperTest {
     void entityToDto_ShouldMapEntityToDto_ok() {
         // Arrange
         Pizza pizza = new Pizza();
-        pizza.setId(1);
         pizza.setPizzaName(PizzaName.HAWAII);
         pizza.setSize(PizzaSize.KIDS);
         pizza.setQuantity(2);
@@ -61,7 +58,6 @@ class PizzaDtoMapperTest {
         PizzaDto result = pizzaDtoMapper.entityToDto(pizza);
 
         // Assert
-        assertEquals(pizza.getId(), result.getId());
         assertEquals(String.valueOf(pizza.getPizzaName()), result.getPizzaName());
         assertEquals(String.valueOf(pizza.getSize()), result.getSize());
         assertEquals(pizza.getQuantity(), result.getQuantity());

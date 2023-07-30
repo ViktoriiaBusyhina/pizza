@@ -1,5 +1,6 @@
 package com.example.pizza.controller;
 
+import com.example.pizza.dto.PizzaDto;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.service.PizzaService;
 import org.junit.jupiter.api.Test;
@@ -28,10 +29,10 @@ class PizzaControllerTest {
     @Test
     void createNewPizza_ShouldReturnOk_ok() {
         // Arrange
-        Pizza pizza = new Pizza();
+        PizzaDto pizza = new PizzaDto();
 
         // Act
-        ResponseEntity<Pizza> response = pizzaController.createNewPizza(pizza);
+        ResponseEntity<PizzaDto> response = pizzaController.createNewPizza(pizza);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -41,13 +42,13 @@ class PizzaControllerTest {
     @Test
     void findAllPizzas_WithPizzas_ShouldReturnOkWithPizzas_ok() {
         // Arrange
-        List<Pizza> pizzas = new ArrayList<>();
-        pizzas.add(new Pizza());
+        List<PizzaDto> pizzas = new ArrayList<>();
+        pizzas.add(new PizzaDto());
 
         when(pizzaService.findAll()).thenReturn(pizzas);
 
         // Act
-        ResponseEntity<List<Pizza>> response = pizzaController.findAllPizzas();
+        ResponseEntity<List<PizzaDto>> response = pizzaController.findAllPizzas();
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -61,7 +62,7 @@ class PizzaControllerTest {
         when(pizzaService.findAll()).thenReturn(new ArrayList<>());
 
         // Act
-        ResponseEntity<List<Pizza>> response = pizzaController.findAllPizzas();
+        ResponseEntity<List<PizzaDto>> response = pizzaController.findAllPizzas();
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -72,13 +73,13 @@ class PizzaControllerTest {
     void findPizzaById_ExistingId_ShouldReturnOkWithPizza_ok() {
         // Arrange
         Integer id = 1;
-        Pizza pizza = new Pizza();
+        PizzaDto pizza = new PizzaDto();
         pizza.setId(id);
 
         when(pizzaService.findById(id)).thenReturn(pizza);
 
         // Act
-        ResponseEntity<Pizza> response = pizzaController.findPizzaById(id);
+        ResponseEntity<PizzaDto> response = pizzaController.findPizzaById(id);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -91,33 +92,15 @@ class PizzaControllerTest {
     void updatePizza_ExistingId_ShouldReturnOkWithUpdatedPizza_ok() {
         // Arrange
         Integer id = 1;
-        Pizza pizza = new Pizza();
+        PizzaDto pizza = new PizzaDto();
         pizza.setId(id);
 
-        when(pizzaService.update(id, pizza)).thenReturn(pizza);
-
         // Act
-        ResponseEntity<Pizza> response = pizzaController.updatePizza(id, pizza);
+        ResponseEntity<PizzaDto> response = pizzaController.updatePizza(id, pizza);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(pizza, response.getBody());
-        verify(pizzaService, times(1)).update(id, pizza);
-    }
-
-    @Test
-    void updatePizza_NonExistingId_ShouldReturnNotFound_ok() {
-        // Arrange
-        Integer id = 1;
-        Pizza pizza = new Pizza();
-
-        when(pizzaService.update(id, pizza)).thenReturn(null);
-
-        // Act
-        ResponseEntity<Pizza> response = pizzaController.updatePizza(id, pizza);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(pizzaService, times(1)).update(id, pizza);
     }
 
@@ -151,7 +134,7 @@ class PizzaControllerTest {
     void orderPizza_ShouldReturnOk_ok() {
         // Arrange
         Integer customerId = 1;
-        Pizza pizza = new Pizza();
+        PizzaDto pizza = new PizzaDto();
 
         // Act
         ResponseEntity<String> response = pizzaController.orderPizza(customerId, pizza);

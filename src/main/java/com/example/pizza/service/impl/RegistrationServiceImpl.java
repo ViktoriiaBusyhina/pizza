@@ -1,6 +1,8 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CustomerDto;
 import com.example.pizza.dto.CustomerRegistrationDto;
+import com.example.pizza.dto.mapper.CustomerDtoMapper;
 import com.example.pizza.dto.mapper.CustomerRegistrationDtoMapper;
 import com.example.pizza.enam.PaymentMethod;
 import com.example.pizza.enam.Roles;
@@ -19,14 +21,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final CustomerService customerService;
     private final CustomerRegistrationDtoMapper customerRegistrationDtoMapper;
+    private final CustomerDtoMapper customerDtoMapper;
     private final JdbcUserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void registerNewCustomer(CustomerRegistrationDto customerRegistrationDto) {
         Customer customer = customerRegistrationDtoMapper.dtoToEntity(customerRegistrationDto);
+        CustomerDto customerDto = customerDtoMapper.entityToDto(customer);
         customer.setPaymentMethod(PaymentMethod.CASH_TO_THE_COURIER);
-        customerService.createNewCustomer(customer);
+        customerService.createNewCustomer(customerDto);
         if (!userDetailsManager.userExists(customer.getEmail())) {
             String encodedPassword = passwordEncoder.encode(customer.getPassword());
             userDetailsManager.createUser(User.withUsername(customer.getEmail())
@@ -34,7 +38,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     .roles(Roles.USER.toString())
                     .build());
         }
-
     }
-
 }

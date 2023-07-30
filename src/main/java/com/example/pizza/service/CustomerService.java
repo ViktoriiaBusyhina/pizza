@@ -1,5 +1,6 @@
 package com.example.pizza.service;
 
+import com.example.pizza.dto.CustomerDto;
 import com.example.pizza.entity.Customer;
 
 import java.util.List;
@@ -14,14 +15,14 @@ public interface CustomerService {
      *
      * @param customer the customer to create
      */
-    void createNewCustomer(Customer customer);
+    void createNewCustomer(CustomerDto customer);
 
     /**
      * Returns a list of all customers.
      *
      * @return a list of all customers
      */
-    List<Customer> findAll();
+    List<CustomerDto> findAll();
 
     /**
      * Finds a customer by their ID.
@@ -29,7 +30,7 @@ public interface CustomerService {
      * @param id the ID of the customer to find
      * @return the customer with the specified ID, or null if not found
      */
-    Customer findById(Integer id);
+    CustomerDto findById(Integer id);
 
     /**
      * Updates a customer with the specified ID.
@@ -38,7 +39,7 @@ public interface CustomerService {
      * @param customer the updated customer object
      * @return the updated customer
      */
-    Customer update(Integer id, Customer customer);
+    void update(Integer id, CustomerDto customer);
 
     /**
      * Deletes a customer with the specified ID.

@@ -18,7 +18,6 @@ public class CustomerDtoMapper implements DtoMapper<Customer, CustomerDto> {
      */
     public Customer dtoToEntity(CustomerDto customerDto) {
         Customer customer = new Customer();
-        customer.setId(customerDto.getId());
         customer.setName(customerDto.getName());
         customer.setAddress(customerDto.getAddress());
         customer.setPhone(customerDto.getPhone());
@@ -36,7 +35,6 @@ public class CustomerDtoMapper implements DtoMapper<Customer, CustomerDto> {
      */
     public CustomerDto entityToDto(Customer customer) {
         CustomerDto customerDto = new CustomerDto();
-        customerDto.setId(customer.getId());
         customerDto.setName(customer.getName());
         customerDto.setAddress(customer.getAddress());
         customerDto.setPhone(customer.getPhone());

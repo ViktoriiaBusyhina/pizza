@@ -1,5 +1,6 @@
 package com.example.pizza.controller;
 
+import com.example.pizza.dto.CafeDto;
 import com.example.pizza.entity.Cafe;
 import com.example.pizza.service.CafeService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CafeController {
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
     @PostMapping(value = "/new-cafe")
-    public ResponseEntity<Cafe> createNewCafe(@RequestBody Cafe cafe) {
+    public ResponseEntity<CafeDto> createNewCafe(@RequestBody CafeDto cafe) {
         cafeService.createNewCafe(cafe);
         return ResponseEntity.ok().build();
     }
@@ -40,8 +41,8 @@ public class CafeController {
      * @return a ResponseEntity containing the list of cafes or indicating no content
      */
     @GetMapping(value = "/cafe/find/all")
-    public ResponseEntity<List<Cafe>> findAllCafes() {
-        List<Cafe> cafeList = cafeService.findAll();
+    public ResponseEntity<List<CafeDto>> findAllCafes() {
+        List<CafeDto> cafeList = cafeService.findAll();
         if (cafeList != null && !cafeList.isEmpty()) {
             return ResponseEntity.ok(cafeList);
         } else {
@@ -56,8 +57,8 @@ public class CafeController {
      * @return a ResponseEntity containing the retrieved cafe
      */
     @GetMapping(value = "/cafe/find/{id}")
-    public ResponseEntity<Cafe> findCafeById(@PathVariable Integer id) {
-        Cafe cafe = cafeService.findById(id);
+    public ResponseEntity<CafeDto> findCafeById(@PathVariable Integer id) {
+        CafeDto cafe = cafeService.findById(id);
         return ResponseEntity.ok(cafe);
     }
 
@@ -69,9 +70,9 @@ public class CafeController {
      * @return a ResponseEntity with the updated cafe or HTTP status 404 if the cafe is not found
      */
     @PutMapping(value = "/cafe/update/{id}")
-    public ResponseEntity<Cafe> updateCafe(@PathVariable Integer id, @RequestBody Cafe cafe) {
-        Cafe cafeUpdate = cafeService.update(id, cafe);
-        return cafeUpdate != null ? ResponseEntity.ok(cafeUpdate) : ResponseEntity.notFound().build();
+    public ResponseEntity<CafeDto> updateCafe(@PathVariable Integer id, @RequestBody CafeDto cafe) {
+        cafeService.update(id, cafe);
+        return ResponseEntity.ok(cafe);
     }
 
     /**

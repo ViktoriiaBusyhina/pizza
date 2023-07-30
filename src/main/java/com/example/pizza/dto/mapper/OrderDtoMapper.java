@@ -22,7 +22,6 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
      */
     public Order dtoToEntity(OrderDto orderDto) {
         Order order = new Order();
-        order.setId(orderDto.getId());
         order.setCustomerId(orderDto.getCustomerId());
         order.setCafeId(orderDto.getCafeId());
         order.setPaymentMethod(PaymentMethod.valueOf(orderDto.getPaymentMethod()));
@@ -39,7 +38,6 @@ public class OrderDtoMapper implements DtoMapper<Order, OrderDto> {
      */
     public OrderDto entityToDto(Order order) {
         OrderDto orderDto = new OrderDto();
-        orderDto.setId(order.getId());
         orderDto.setCustomerId(order.getCustomerId());
         orderDto.setCafeId(order.getCafeId());
         orderDto.setPaymentMethod(String.valueOf(order.getPaymentMethod()));

@@ -1,5 +1,6 @@
 package com.example.pizza.controller;
 
+import com.example.pizza.dto.OrderDto;
 import com.example.pizza.entity.Order;
 import com.example.pizza.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class OrderController {
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
     @PostMapping(value = "/new-order")
-    public ResponseEntity<Order> createNewOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderDto> createNewOrder(@RequestBody OrderDto order) {
         orderService.createNewOrder(order);
         return ResponseEntity.ok().build();
     }
@@ -38,8 +39,8 @@ public class OrderController {
      * @return a ResponseEntity containing the retrieved order
      */
     @GetMapping(value = "/order/find/{id}")
-    public ResponseEntity<Order> findOrderById(@PathVariable Integer id) {
-        Order order = orderService.findById(id);
+    public ResponseEntity<OrderDto> findOrderById(@PathVariable Integer id) {
+        OrderDto order = orderService.findById(id);
         return ResponseEntity.ok(order);
     }
 
@@ -49,8 +50,8 @@ public class OrderController {
      * @return a ResponseEntity containing the list of orders or indicating no content
      */
     @GetMapping(value = "/order/find/all")
-    public ResponseEntity<List<Order>> findAllOrders() {
-        List<Order> orderList = orderService.findAll();
+    public ResponseEntity<List<OrderDto>> findAllOrders() {
+        List<OrderDto> orderList = orderService.findAll();
         if (orderList != null && !orderList.isEmpty()) {
             return ResponseEntity.ok(orderList);
         } else {
@@ -66,9 +67,9 @@ public class OrderController {
      * @return a ResponseEntity with the updated order or HTTP status 404 if the order is not found
      */
     @PutMapping(value = "/order/update/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Integer id, @RequestBody Order order) {
-        Order orderUpdate = orderService.update(id, order);
-        return orderUpdate != null ? ResponseEntity.ok(orderUpdate) : ResponseEntity.notFound().build();
+    public ResponseEntity<OrderDto> updateOrder(@PathVariable Integer id, @RequestBody OrderDto order) {
+        orderService.update(id, order);
+        return ResponseEntity.ok(order);
     }
 
     /**

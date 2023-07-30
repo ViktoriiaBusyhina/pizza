@@ -1,5 +1,9 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CustomerDto;
+import com.example.pizza.dto.OrderDto;
+import com.example.pizza.dto.mapper.CustomerDtoMapper;
+import com.example.pizza.dto.mapper.OrderDtoMapper;
 import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PaymentMethod;
 import com.example.pizza.enam.PaymentStatus;
@@ -10,6 +14,7 @@ import com.example.pizza.exception.OrderNotAllowedException;
 import com.example.pizza.repository.OrderRepository;
 import com.example.pizza.service.CustomerService;
 import com.example.pizza.service.conventer.OrderUpdateService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,15 +37,28 @@ class OrderServiceImplTest {
     @Mock
     OrderUpdateService orderUpdateService;
     @Mock
+    OrderDtoMapper orderDtoMapper;
+    @Mock
     CustomerService customerService;
+    @Mock
+    CustomerDtoMapper customerDtoMapper;
     @InjectMocks
     OrderServiceImpl orderService;
+
+    OrderDto orderDto;
+
+    @BeforeEach
+    void setUp() {
+        orderDto = new OrderDto();
+    }
 
     @Test
     void createNewOrder_ValidCustomerAndSuccessfulPayment_ShouldSaveOrder_ok() {
         // Arrange
+        OrderDto orderDto = new OrderDto();
         Order order = new Order();
         order.setCustomerId(1);
+        CustomerDto customerDto = new CustomerDto();
         Customer customer = new Customer();
         customer.setBlocked(false);
         customer.setPaymentMethod(PaymentMethod.CARD);
@@ -50,11 +68,13 @@ class OrderServiceImplTest {
         customer.setPhone("3432543");
         customer.setEmail("dhcfgsivg");
 
-        when(customerService.findById(1)).thenReturn(customer);
+        when(customerService.findById(1)).thenReturn(customerDto);
+        when(customerDtoMapper.dtoToEntity(customerDto)).thenReturn(customer);
+        when(orderDtoMapper.dtoToEntity(orderDto)).thenReturn(order);
         when(orderRepository.save(order)).thenReturn(order);
 
         // Act
-        orderService.createNewOrder(order);
+        orderService.createNewOrder(orderDto);
 
         // Assert
         assertEquals(OrderStatus.PROCESSING, order.getOrderStatus());
@@ -63,21 +83,27 @@ class OrderServiceImplTest {
     @Test
     void createNewOrder_InvalidCustomer_ShouldThrowIllegalArgumentException_ok() {
         // Arrange
+        OrderDto orderDto = new OrderDto();
         Order order = new Order();
         order.setCustomerId(1);
+        CustomerDto customerDto = new CustomerDto();
         Customer customer = new Customer();
 
-        when(customerService.findById(1)).thenReturn(customer);
+        when(orderDtoMapper.dtoToEntity(orderDto)).thenReturn(order);
+        when(customerService.findById(1)).thenReturn(customerDto);
+        when(customerDtoMapper.dtoToEntity(customerDto)).thenReturn(customer);
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> orderService.createNewOrder(order));
+        assertThrows(IllegalArgumentException.class, () -> orderService.createNewOrder(orderDto));
         verify(orderRepository, never()).save(order);
     }
     @Test
     void createNewOrder_OrderNotAllowed_ShouldThrowOrderNotAllowedException_ok() {
         // Arrange
+        OrderDto orderDto = new OrderDto();
         Order order = new Order();
         order.setCustomerId(1);
+        CustomerDto customerDto = new CustomerDto();
         Customer customer = new Customer();
         customer.setBlocked(true);
         customer.setPaymentMethod(PaymentMethod.CARD);
@@ -87,10 +113,12 @@ class OrderServiceImplTest {
         customer.setPhone("3432543");
         customer.setEmail("dhcfgsivg");
 
-        when(customerService.findById(1)).thenReturn(customer);
+        when(orderDtoMapper.dtoToEntity(orderDto)).thenReturn(order);
+        when(customerService.findById(1)).thenReturn(customerDto);
+        when(customerDtoMapper.dtoToEntity(customerDto)).thenReturn(customer);
 
         // Act & Assert
-        assertThrows(OrderNotAllowedException.class, () -> orderService.createNewOrder(order));
+        assertThrows(OrderNotAllowedException.class, () -> orderService.createNewOrder(orderDto));
         verify(orderRepository, never()).save(order);
     }
 
@@ -100,6 +128,7 @@ class OrderServiceImplTest {
         Order order = new Order();
         order.setCustomerId(1);
         order.setPaymentStatus(PaymentStatus.FAILED);
+        CustomerDto customerDto = new CustomerDto();
         Customer customer = new Customer();
         customer.setBlocked(false);
         customer.setPaymentMethod(PaymentMethod.CARD);
@@ -108,10 +137,12 @@ class OrderServiceImplTest {
         customer.setPhone("3432543");
         customer.setEmail("dhcfgsivg");
 
-        when(customerService.findById(1)).thenReturn(customer);
+        when(orderDtoMapper.dtoToEntity(orderDto)).thenReturn(order);
+        when(customerService.findById(1)).thenReturn(customerDto);
+        when(customerDtoMapper.dtoToEntity(customerDto)).thenReturn(customer);
 
         // Act & Assert
-        assertThrows(OrderNotAllowedException.class, () -> orderService.createNewOrder(order));
+        assertThrows(OrderNotAllowedException.class, () -> orderService.createNewOrder(orderDto));
         verify(orderRepository, never()).save(order);
     }
 
@@ -124,12 +155,13 @@ class OrderServiceImplTest {
         order.setId(id);
 
         when(orderRepository.findById(id)).thenReturn(Optional.of(order));
+        when(orderDtoMapper.entityToDto(order)).thenReturn(orderDto);
 
         // Act
-        Order result = orderService.findById(id);
+        OrderDto result = orderService.findById(id);
 
         // Assert
-        assertEquals(order, result);
+        assertEquals(orderDto, result);
     }
     @Test
     void findById_NonExistingId_ShouldThrowDataNotFoundException_ok() {
@@ -146,48 +178,51 @@ class OrderServiceImplTest {
     @Test
     void findAll_ShouldReturnAllOrders_ok() {
         // Arrange
+        Order order = new Order();
         List<Order> orders = new ArrayList<>();
-        orders.add(new Order());
-        orders.add(new Order());
+        orders.add(order);
 
         when(orderRepository.findAll()).thenReturn(orders);
+        when(orderDtoMapper.entityToDto(order)).thenReturn(orderDto);
 
         // Act
-        List<Order> result = orderService.findAll();
+        List<OrderDto> result = orderService.findAll();
 
         // Assert
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
     void update_ExistingId_ShouldUpdateAndReturnOrder_ok() {
         // Arrange
-        Integer id = 1;
+        Integer orderId = 1;
+        OrderDto orderDto = new OrderDto();
         Order existingOrder = new Order();
+        Order orderUpdate = new Order();
         Order updatedOrder = new Order();
 
-        when(orderRepository.findById(id)).thenReturn(Optional.of(existingOrder));
-        when(orderUpdateService.convert(existingOrder, updatedOrder)).thenReturn(updatedOrder);
-        when(orderRepository.save(updatedOrder)).thenReturn(updatedOrder);
+        when(orderRepository.findById(orderId)).thenReturn(Optional.of(existingOrder));
+        when(orderDtoMapper.dtoToEntity(orderDto)).thenReturn(orderUpdate);
+        when(orderUpdateService.convert(existingOrder, orderUpdate)).thenReturn(updatedOrder);
 
         // Act
-        Order result = orderService.update(id, updatedOrder);
+        orderService.update(orderId, orderDto);
 
         // Assert
-        assertEquals(updatedOrder, result);
-        verify(orderRepository, times(1)).save(updatedOrder);
+        verify(orderRepository).save(updatedOrder);
     }
+
     @Test
     void update_NonExistingId_ShouldThrowDataNotFoundException_ok() {
         // Arrange
         Integer id = 1;
-        Order updatedOrder = new Order();
+        OrderDto updatedOrder = new OrderDto();
 
         when(orderRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(DataNotFoundException.class, () -> orderService.update(id, updatedOrder));
-        verify(orderRepository, never()).save(updatedOrder);
+        verify(orderRepository, never()).save(any(Order.class));
     }
 
 

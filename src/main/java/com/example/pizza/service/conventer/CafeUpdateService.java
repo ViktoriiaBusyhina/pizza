@@ -18,6 +18,9 @@ public class CafeUpdateService {
      * @return the updated cafe
      */
     public Cafe convert(Cafe cafe, Cafe cafeUpdate) {
+        if (cafe == null || cafeUpdate == null) {
+            throw new IllegalArgumentException("argument is null");
+        }
         if (cafeUpdate.getName() != null) {
             cafe.setName(cafeUpdate.getName());
         }

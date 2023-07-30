@@ -1,5 +1,7 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CustomerDto;
+import com.example.pizza.dto.mapper.CustomerDtoMapper;
 import com.example.pizza.entity.Customer;
 import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CustomerRepository;
@@ -25,35 +27,42 @@ class CustomerServiceImplTest {
     CustomerRepository customerRepository;
     @Mock
     CustomerUpdateService customerUpdateService;
+    @Mock
+    CustomerDtoMapper customerDtoMapper;
+
     @InjectMocks
     CustomerServiceImpl customerService;
 
     @Test
     void createNewCustomer_ok() {
         // Arrange
-        Customer customer = new Customer();
+        CustomerDto customerDto = new CustomerDto();
+        when(customerDtoMapper.dtoToEntity(customerDto)).thenReturn(new Customer());
 
         // Act
-        customerService.createNewCustomer(customer);
+        customerService.createNewCustomer(customerDto);
 
         // Assert
-        verify(customerRepository, times(1)).save(customer);
+        verify(customerRepository, times(1)).save(any(Customer.class));
     }
 
     @Test
     void findAll_ShouldReturnAllCustomers_ok() {
         // Arrange
+        Customer customer = new Customer();
         List<Customer> customers = new ArrayList<>();
-        customers.add(new Customer());
-        customers.add(new Customer());
+        customers.add(customer);
 
         when(customerRepository.findAll()).thenReturn(customers);
+        when(customerDtoMapper.entityToDto(customer)).thenReturn(new CustomerDto());
 
         // Act
-        List<Customer> result = customerService.findAll();
+        List<CustomerDto> result = customerService.findAll();
 
         // Assert
-        assertEquals(2, result.size());
+        verify(customerRepository).findAll();
+        verify(customerDtoMapper).entityToDto(customer);
+        assertEquals(1, result.size());
     }
 
 
@@ -65,12 +74,15 @@ class CustomerServiceImplTest {
         customer.setId(id);
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(customer));
+        when(customerDtoMapper.entityToDto(customer)).thenReturn(new CustomerDto());
 
         // Act
-        Customer result = customerService.findById(id);
+        CustomerDto result = customerService.findById(id);
 
         // Assert
-        assertEquals(customer, result);
+        assertEquals(new CustomerDto(), result);
+        verify(customerRepository).findById(id);
+        verify(customerDtoMapper).entityToDto(customer);
     }
     @Test
     void findById_NonExistingId_ShouldThrowDataNotFoundException_ok() {
@@ -88,31 +100,33 @@ class CustomerServiceImplTest {
         // Arrange
         Integer id = 1;
         Customer existingCustomer = new Customer();
-        Customer updatedCustomer = new Customer();
+        CustomerDto updatedCustomer = new CustomerDto();
+        Customer mappedCustomer = new Customer();
 
         when(customerRepository.findById(id)).thenReturn(Optional.of(existingCustomer));
-        when(customerUpdateService.convert(existingCustomer, updatedCustomer)).thenReturn(updatedCustomer);
-        when(customerRepository.save(updatedCustomer)).thenReturn(updatedCustomer);
+        when(customerDtoMapper.dtoToEntity(updatedCustomer)).thenReturn(mappedCustomer);
+        when(customerUpdateService.convert(existingCustomer, mappedCustomer)).thenReturn(mappedCustomer);
 
         // Act
-        Customer result = customerService.update(id, updatedCustomer);
+        customerService.update(id, updatedCustomer);
 
         // Assert
-        assertEquals(updatedCustomer, result);
-        verify(customerRepository, times(1)).save(updatedCustomer);
+        verify(customerRepository).findById(id);
+        verify(customerDtoMapper).dtoToEntity(updatedCustomer);
+        verify(customerRepository, times(1)).save(mappedCustomer);
     }
 
     @Test
     void update_NonExistingId_ShouldThrowDataNotFoundException_ok() {
         // Arrange
         Integer id = 1;
-        Customer updatedCustomer = new Customer();
+        CustomerDto updatedCustomer = new CustomerDto();
 
         when(customerRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(DataNotFoundException.class, () -> customerService.update(id, updatedCustomer));
-        verify(customerRepository, never()).save(updatedCustomer);
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
 

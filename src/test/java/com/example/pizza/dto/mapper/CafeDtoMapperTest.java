@@ -17,7 +17,6 @@ class CafeDtoMapperTest {
     void dtoToEntity_ShouldMapDtoToEntity_ok() {
         // Arrange
         CafeDto cafeDto = new CafeDto();
-        cafeDto.setId(1);
         cafeDto.setPizzaId(2);
         cafeDto.setName("Cafe Name");
         cafeDto.setAddress("Cafe Address");
@@ -28,7 +27,6 @@ class CafeDtoMapperTest {
         Cafe result = cafeDtoMapper.dtoToEntity(cafeDto);
 
         // Assert
-        assertEquals(cafeDto.getId(), result.getId());
         assertEquals(cafeDto.getPizzaId(), result.getPizzaId());
         assertEquals(cafeDto.getName(), result.getName());
         assertEquals(cafeDto.getAddress(), result.getAddress());
@@ -51,7 +49,6 @@ class CafeDtoMapperTest {
         CafeDto result = cafeDtoMapper.entityToDto(cafe);
 
         // Assert
-        assertEquals(cafe.getId(), result.getId());
         assertEquals(cafe.getPizzaId(), result.getPizzaId());
         assertEquals(cafe.getName(), result.getName());
         assertEquals(cafe.getAddress(), result.getAddress());

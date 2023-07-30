@@ -17,7 +17,6 @@ public class CafeDtoMapper implements DtoMapper<Cafe, CafeDto> {
      */
     public Cafe dtoToEntity(CafeDto cafeDto) {
         Cafe cafe = new Cafe();
-        cafe.setId(cafeDto.getId());
         cafe.setPizzaId(cafeDto.getPizzaId());
         cafe.setName(cafeDto.getName());
         cafe.setAddress(cafeDto.getAddress());
@@ -34,7 +33,6 @@ public class CafeDtoMapper implements DtoMapper<Cafe, CafeDto> {
      */
     public CafeDto entityToDto(Cafe cafe) {
         CafeDto cafeDto = new CafeDto();
-        cafeDto.setId(cafe.getId());
         cafeDto.setPizzaId(cafe.getPizzaId());
         cafeDto.setName(cafe.getName());
         cafeDto.setAddress(cafe.getAddress());

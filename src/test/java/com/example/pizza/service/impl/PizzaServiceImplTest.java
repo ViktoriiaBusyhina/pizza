@@ -1,5 +1,8 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.OrderDto;
+import com.example.pizza.dto.PizzaDto;
+import com.example.pizza.dto.mapper.PizzaDtoMapper;
 import com.example.pizza.enam.PizzaStatus;
 import com.example.pizza.entity.Order;
 import com.example.pizza.entity.Pizza;
@@ -7,6 +10,7 @@ import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.PizzaRepository;
 import com.example.pizza.service.OrderService;
 import com.example.pizza.service.conventer.PizzaUpdateService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,25 +28,41 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PizzaServiceImplTest {
+
     @Mock
     PizzaRepository pizzaRepository;
+
     @Mock
     PizzaUpdateService pizzaUpdateService;
+
+    @Mock
+    PizzaDtoMapper pizzaDtoMapper;
+
     @Mock
     OrderService orderService;
+
     @InjectMocks
     PizzaServiceImpl pizzaService;
-    @Captor
-    private ArgumentCaptor<Order> orderCapture;
 
+    PizzaDto pizzaDto;
+    Pizza pizza;
+
+    @Captor
+    private ArgumentCaptor<OrderDto> orderCapture;
+
+    @BeforeEach
+    void setUp() {
+        pizzaDto = new PizzaDto();
+        pizza = new Pizza();
+    }
 
     @Test
     void createNewPizza_ShouldSavePizza_ok() {
         // Arrange
-        Pizza pizza = new Pizza();
+        when(pizzaDtoMapper.dtoToEntity(pizzaDto)).thenReturn(pizza);
 
         // Act
-        pizzaService.createNewPizza(pizza);
+        pizzaService.createNewPizza(pizzaDto);
 
         // Assert
         verify(pizzaRepository, times(1)).save(pizza);
@@ -51,34 +71,34 @@ class PizzaServiceImplTest {
     @Test
     void findAll_ShouldReturnAllPizzas_ok() {
         // Arrange
-        List<Pizza> pizzas = new ArrayList<>();
-        pizzas.add(new Pizza());
-        pizzas.add(new Pizza());
+        List<Pizza> pizzas = List.of(pizza);
 
         when(pizzaRepository.findAll()).thenReturn(pizzas);
+        when(pizzaDtoMapper.entityToDto(pizza)).thenReturn(pizzaDto);
 
         // Act
-        List<Pizza> result = pizzaService.findAll();
+        List<PizzaDto> result = pizzaService.findAll();
 
         // Assert
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
     }
 
     @Test
     void findById_ExistingId_ShouldReturnPizza_ok() {
         // Arrange
         Integer id = 1;
-        Pizza pizza = new Pizza();
         pizza.setId(id);
 
         when(pizzaRepository.findById(id)).thenReturn(Optional.of(pizza));
+        when(pizzaDtoMapper.entityToDto(pizza)).thenReturn(pizzaDto);
 
         // Act
-        Pizza result = pizzaService.findById(id);
+        PizzaDto result = pizzaService.findById(id);
 
         // Assert
-        assertEquals(pizza, result);
+        assertEquals(pizzaDto, result);
     }
+
     @Test
     void findById_NonExistingId_ShouldThrowDataNotFoundException_ok() {
         // Arrange
@@ -98,28 +118,29 @@ class PizzaServiceImplTest {
         Pizza updatedPizza = new Pizza();
 
         when(pizzaRepository.findById(id)).thenReturn(Optional.of(existingPizza));
+        when(pizzaDtoMapper.dtoToEntity(pizzaDto)).thenReturn(updatedPizza);
         when(pizzaUpdateService.convert(existingPizza, updatedPizza)).thenReturn(updatedPizza);
         when(pizzaRepository.save(updatedPizza)).thenReturn(updatedPizza);
 
         // Act
-        Pizza result = pizzaService.update(id, updatedPizza);
+        pizzaService.update(id, pizzaDto);
 
         // Assert
-        assertEquals(updatedPizza, result);
         verify(pizzaRepository, times(1)).save(updatedPizza);
     }
+
     @Test
     void update_NonExistingId_ShouldThrowDataNotFoundException_ok() {
         // Arrange
         Integer id = 1;
         Pizza updatedPizza = new Pizza();
+
         when(pizzaRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(DataNotFoundException.class, () -> pizzaService.update(id, updatedPizza));
-        verify(pizzaRepository, never()).save(updatedPizza);
+        assertThrows(DataNotFoundException.class, () -> pizzaService.update(id, pizzaDto));
+        verify(pizzaRepository, never()).save(any(Pizza.class));
     }
-
 
     @Test
     void delete_ShouldDeletePizza_ok() {
@@ -155,19 +176,15 @@ class PizzaServiceImplTest {
         // Arrange
         Integer customerId = 1;
         Pizza pizza = new Pizza();
-
-        when(pizzaRepository.save(pizza)).thenReturn(pizza);
+        when(pizzaDtoMapper.dtoToEntity(pizzaDto)).thenReturn(pizza);
 
         // Act
-        pizzaService.orderNewPizza(customerId, pizza);
+        pizzaService.orderNewPizza(customerId, pizzaDto);
 
         // Assert
         verify(pizzaRepository, times(1)).save(pizza);
-        verify(orderService).createNewOrder(any(Order.class));
         verify(orderService).createNewOrder(orderCapture.capture());
-        Order order = orderCapture.getValue();
-        assertEquals(order.getId(), pizza.getOrderId());
+        OrderDto order = orderCapture.getValue();
     }
-
 
 }

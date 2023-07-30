@@ -2,6 +2,10 @@ package com.example.pizza.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+/**
+ * Entity class representing a user authority in the system.
+ * User authorities are stored in the "authorities" table in the database.
+ */
 
 @Data
 @Entity

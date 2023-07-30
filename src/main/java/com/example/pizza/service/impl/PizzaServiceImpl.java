@@ -1,8 +1,10 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.OrderDto;
+import com.example.pizza.dto.PizzaDto;
+import com.example.pizza.dto.mapper.PizzaDtoMapper;
 import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PizzaStatus;
-import com.example.pizza.entity.Order;
 import com.example.pizza.entity.Pizza;
 import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.PizzaRepository;
@@ -23,35 +25,38 @@ public class PizzaServiceImpl implements PizzaService {
 
     private final PizzaRepository pizzaRepository;
     private final PizzaUpdateService pizzaUpdateService;
+    private final PizzaDtoMapper pizzaDtoMapper;
     private final OrderService orderService;
 
     @Override
-    public void createNewPizza(Pizza pizza) {
+    public void createNewPizza(PizzaDto pizzaDto) {
+        Pizza pizza = pizzaDtoMapper.dtoToEntity(pizzaDto);
         pizzaRepository.save(pizza);
     }
 
     @Override
-    public List<Pizza> findAll() {
-        return pizzaRepository.findAll();
+    public List<PizzaDto> findAll() {
+        List<Pizza> pizzas = pizzaRepository.findAll();
+        return pizzas.stream()
+                .map(pizzaDtoMapper::entityToDto)
+                .toList();
     }
 
     @Override
-    public Pizza findById(Integer id) {
-        Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
-        return pizzaOptional.orElseThrow(() -> new DataNotFoundException());
+    public PizzaDto findById(Integer id) {
+        Pizza pizza = pizzaRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        return pizzaDtoMapper.entityToDto(pizza);
     }
 
     @Override
     @Transactional
-    public Pizza update(Integer id, Pizza pizzaUpdate) {
-        Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
-        if (pizzaOptional.isPresent()) {
-            Pizza existingPizza = pizzaOptional.get();
-            Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
-            pizzaRepository.save(updated);
-            return updated;
-        }
-        throw new DataNotFoundException();
+    public void update(Integer id, PizzaDto pizza) {
+        Pizza existingPizza = pizzaRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        Pizza pizzaUpdate = pizzaDtoMapper.dtoToEntity(pizza);
+        Pizza updated = pizzaUpdateService.convert(existingPizza, pizzaUpdate);
+        pizzaRepository.save(updated);
     }
 
     @Override
@@ -72,15 +77,14 @@ public class PizzaServiceImpl implements PizzaService {
     }
     @Override
     @Transactional
-    public void orderNewPizza(Integer customerId, Pizza pizza) { //делаем заказ пиццы по айди клиента
-        Order order = new Order();
+    public void orderNewPizza(Integer customerId, PizzaDto pizzaDto) { //делаем заказ пиццы по айди клиента
+        OrderDto order = new OrderDto();
+        Pizza pizza = pizzaDtoMapper.dtoToEntity(pizzaDto);
         order.setCustomerId(customerId); //присваеваем айди клиента
-        order.setOrderStatus(OrderStatus.PROCESSING); //устанавливаем статус "в процессе"
-//        order.setCafeId();
+        order.setOrderStatus(OrderStatus.PROCESSING.toString()); //устанавливаем статус "в процессе"
         orderService.createNewOrder(order); //сохраняем его в баззу данных
 
         pizza.setOrderId(order.getId()); //добавляем для пиццы номер заказа
-//        pizza.setCafeId();
         pizzaRepository.save(pizza);
     }
 }

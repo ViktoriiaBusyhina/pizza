@@ -1,6 +1,7 @@
 package com.example.pizza.service;
 
 
+import com.example.pizza.dto.PizzaDto;
 import com.example.pizza.entity.Pizza;
 
 import java.util.List;
@@ -15,14 +16,14 @@ public interface PizzaService {
      *
      * @param pizza the pizza to create
      */
-    void createNewPizza(Pizza pizza);
+    void createNewPizza(PizzaDto pizza);
 
     /**
      * Returns a list of all pizzas.
      *
      * @return a list of all pizzas
      */
-    List<Pizza> findAll();
+    List<PizzaDto> findAll();
 
     /**
      * Finds a pizza by its ID.
@@ -30,7 +31,7 @@ public interface PizzaService {
      * @param id the ID of the pizza to find
      * @return the pizza with the specified ID, or null if not found
      */
-    Pizza findById(Integer id);
+    PizzaDto findById(Integer id);
 
     /**
      * Updates a pizza with the specified ID.
@@ -39,7 +40,7 @@ public interface PizzaService {
      * @param pizza the updated pizza object
      * @return the updated pizza
      */
-    Pizza update(Integer id, Pizza pizza);
+    void update(Integer id, PizzaDto pizza);
 
     /**
      * Deletes a pizza with the specified ID.
@@ -55,5 +56,5 @@ public interface PizzaService {
      */
     void blockPizzaById(Integer id);
 
-    void orderNewPizza(Integer customerId, Pizza pizza);
+    void orderNewPizza(Integer customerId, PizzaDto pizza);
 }

@@ -1,6 +1,6 @@
 package com.example.pizza.service;
 
-import com.example.pizza.entity.Order;
+import com.example.pizza.dto.OrderDto;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public interface OrderService {
      *
      * @param order the order to create
      */
-    void createNewOrder(Order order);
+    void createNewOrder(OrderDto order);
 
     /**
      * Finds an order by its ID.
@@ -22,14 +22,14 @@ public interface OrderService {
      * @param id the ID of the order to find
      * @return the order with the specified ID, or null if not found
      */
-    Order findById(Integer id);
+    OrderDto findById(Integer id);
 
     /**
      * Returns a list of all orders.
      *
      * @return a list of all orders
      */
-    List<Order> findAll();
+    List<OrderDto> findAll();
 
     /**
      * Updates an order with the specified ID.
@@ -38,7 +38,7 @@ public interface OrderService {
      * @param order the updated order object
      * @return the updated order
      */
-    Order update(Integer id, Order order);
+    void update(Integer id, OrderDto order);
 
     /**
      * Deletes an order with the specified ID.

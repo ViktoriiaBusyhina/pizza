@@ -1,6 +1,6 @@
 package com.example.pizza.controller;
 
-import com.example.pizza.entity.Customer;
+import com.example.pizza.dto.CustomerDto;
 import com.example.pizza.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class CustomerController {
      * @return a ResponseEntity with HTTP status indicating the success of the operation
      */
     @PostMapping(value = "/new-customer")
-    public ResponseEntity<Customer> createNewCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<CustomerDto> createNewCustomer(@RequestBody CustomerDto customer) {
         customerService.createNewCustomer(customer);
         return ResponseEntity.ok().build();
     }
@@ -36,8 +36,8 @@ public class CustomerController {
      * @return a ResponseEntity containing the list of customers or indicating no content
      */
     @GetMapping(value = "/customer/find/all")
-    public ResponseEntity<List<Customer>> findAllCustomers() {
-        List<Customer> customerList = customerService.findAll();
+    public ResponseEntity<List<CustomerDto>> findAllCustomers() {
+        List<CustomerDto> customerList = customerService.findAll();
         if (customerList != null && !customerList.isEmpty()) {
             return ResponseEntity.ok(customerList);
         } else {
@@ -52,8 +52,8 @@ public class CustomerController {
      * @return a ResponseEntity containing the retrieved customer
      */
     @GetMapping(value = "/customer/find/{id}")
-    public ResponseEntity<Customer> findCustomerById(@PathVariable Integer id) {
-        Customer customer = customerService.findById(id);
+    public ResponseEntity<CustomerDto> findCustomerById(@PathVariable Integer id) {
+        CustomerDto customer = customerService.findById(id);
         return ResponseEntity.ok(customer);
     }
 
@@ -65,9 +65,9 @@ public class CustomerController {
      * @return a ResponseEntity with the updated customer or HTTP status 404 if the customer is not found
      */
     @PutMapping(value = "/customer/update/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody Customer customer) {
-        Customer customerUpdate = customerService.update(id, customer);
-        return customerUpdate != null ? ResponseEntity.ok(customerUpdate) : ResponseEntity.notFound().build();
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Integer id, @RequestBody CustomerDto customer) {
+        customerService.update(id, customer);
+        return ResponseEntity.ok(customer);
     }
 
     /**

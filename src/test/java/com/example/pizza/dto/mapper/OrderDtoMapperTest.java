@@ -3,6 +3,7 @@ package com.example.pizza.dto.mapper;
 import com.example.pizza.dto.OrderDto;
 import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PaymentMethod;
+import com.example.pizza.enam.PaymentStatus;
 import com.example.pizza.entity.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,21 +19,21 @@ class OrderDtoMapperTest {
     void dtoToEntity_ShouldMapDtoToEntity() {
         // Arrange
         OrderDto orderDto = new OrderDto();
-        orderDto.setId(1);
         orderDto.setCustomerId(2);
         orderDto.setCafeId(3);
         orderDto.setPaymentMethod("CARD");
         orderDto.setOrderStatus("PROCESSING");
+        orderDto.setPaymentStatus("SUCCESSFUL");
 
         // Act
         Order result = orderDtoMapper.dtoToEntity(orderDto);
 
         // Assert
-        assertEquals(orderDto.getId(), result.getId());
         assertEquals(orderDto.getCustomerId(), result.getCustomerId());
         assertEquals(orderDto.getCafeId(), result.getCafeId());
         assertEquals(PaymentMethod.CARD, result.getPaymentMethod());
         assertEquals(OrderStatus.PROCESSING, result.getOrderStatus());
+        assertEquals(PaymentStatus.SUCCESSFUL, result.getPaymentStatus());
     }
 
     @Test
@@ -49,7 +50,6 @@ class OrderDtoMapperTest {
         OrderDto result = orderDtoMapper.entityToDto(order);
 
         // Assert
-        assertEquals(order.getId(), result.getId());
         assertEquals(order.getCustomerId(), result.getCustomerId());
         assertEquals(order.getCafeId(), result.getCafeId());
         assertEquals(String.valueOf(order.getPaymentMethod()), result.getPaymentMethod());

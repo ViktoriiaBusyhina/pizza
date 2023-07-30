@@ -1,5 +1,7 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CafeDto;
+import com.example.pizza.dto.mapper.CafeDtoMapper;
 import com.example.pizza.entity.Cafe;
 import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CafeRepository;
@@ -24,6 +26,8 @@ class CafeServiceImplTest {
     CafeRepository cafeRepository;
     @Mock
     CafeUpdateService cafeUpdateService;
+    @Mock
+    CafeDtoMapper cafeDtoMapper;
 
     @InjectMocks
     CafeServiceImpl cafeService;
@@ -35,41 +39,52 @@ class CafeServiceImplTest {
     @Test
     void createNewCafe_ok() {
         // given
+        CafeDto cafeDto = new CafeDto();
         Cafe cafe = new Cafe();
+        when(cafeDtoMapper.dtoToEntity(cafeDto)).thenReturn(cafe);
 
         // when
-        cafeService.createNewCafe(cafe);
+        cafeService.createNewCafe(cafeDto);
 
         // then
+        verify(cafeDtoMapper).dtoToEntity(cafeDto);
         verify(cafeRepository).save(cafe);
     }
 
     @Test
     void findAll_ok() {
         // given
-        List<Cafe> expected = List.of(new Cafe(), new Cafe());
-        when(cafeRepository.findAll()).thenReturn(expected);
+        Cafe cafe = new Cafe();
+        CafeDto cafeDto = new CafeDto();
+        List<Cafe> cafes = List.of(cafe);
+        List<CafeDto> expected = List.of(cafeDto);
+        when(cafeRepository.findAll()).thenReturn(cafes);
+        when(cafeDtoMapper.entityToDto(cafe)).thenReturn(cafeDto);
 
         // when
-        List<Cafe> actual = cafeService.findAll();
+        List<CafeDto> actual = cafeService.findAll();
 
         // then
         assertEquals(expected, actual);
+        verify(cafeDtoMapper).entityToDto(cafe);
         verify(cafeRepository).findAll();
     }
 
     @Test
     void findById_ok() {
         // given
-        Cafe expected = new Cafe();
+        CafeDto expected = new CafeDto();
+        Cafe cafe = new Cafe();
         Integer id = 1;
-        when(cafeRepository.findById(id)).thenReturn(Optional.of(expected));
+        when(cafeRepository.findById(id)).thenReturn(Optional.of(cafe));
+        when(cafeDtoMapper.entityToDto(cafe)).thenReturn(expected);
 
         // when
-        Cafe actual = cafeService.findById(id);
+        CafeDto actual = cafeService.findById(id);
 
         // then
         assertEquals(expected, actual);
+        verify(cafeDtoMapper).entityToDto(cafe);
         verify(cafeRepository).findById(id);
     }
 
@@ -84,31 +99,33 @@ class CafeServiceImplTest {
         // Arrange
         Integer id = 1;
         Cafe existingCafe = new Cafe();
-        Cafe updatedCafe = new Cafe();
+        CafeDto updatedCafe = new CafeDto();
+        Cafe mappedCafe = new Cafe();
 
         when(cafeRepository.findById(id)).thenReturn(Optional.of(existingCafe));
-        when(cafeUpdateService.convert(existingCafe, updatedCafe)).thenReturn(updatedCafe);
-        when(cafeRepository.save(updatedCafe)).thenReturn(updatedCafe);
+        when(cafeDtoMapper.dtoToEntity(updatedCafe)).thenReturn(mappedCafe);
+        when(cafeUpdateService.convert(existingCafe, mappedCafe)).thenReturn(mappedCafe);
 
         // Act
-        Cafe result = cafeService.update(id, updatedCafe);
+        cafeService.update(id, updatedCafe);
 
         // Assert
-        assertEquals(updatedCafe, result);
-        verify(cafeRepository, times(1)).save(updatedCafe);
+        verify(cafeRepository).findById(id);
+        verify(cafeDtoMapper).dtoToEntity(updatedCafe);
+        verify(cafeRepository, times(1)).save(mappedCafe);
     }
 
     @Test
     void update_NonExistingId_ShouldThrowDataNotFoundException_ok() {
         // Arrange
         Integer id = 1;
-        Cafe updatedCafe = new Cafe();
+        CafeDto updatedCafe = new CafeDto();
 
         when(cafeRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(DataNotFoundException.class, () -> cafeService.update(id, updatedCafe));
-        verify(cafeRepository, never()).save(updatedCafe);
+        verify(cafeRepository, never()).save(any(Cafe.class));
     }
 
 

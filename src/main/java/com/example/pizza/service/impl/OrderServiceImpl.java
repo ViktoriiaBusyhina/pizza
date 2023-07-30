@@ -1,5 +1,9 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CustomerDto;
+import com.example.pizza.dto.OrderDto;
+import com.example.pizza.dto.mapper.CustomerDtoMapper;
+import com.example.pizza.dto.mapper.OrderDtoMapper;
 import com.example.pizza.enam.OrderStatus;
 import com.example.pizza.enam.PaymentStatus;
 import com.example.pizza.entity.Customer;
@@ -20,16 +24,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private static final String EXCEPTION_MESSAGE = "Order is not allowed";
+    private static final String NO_STATUS = "no status";
+
     private final OrderRepository orderRepository;
     private final OrderUpdateService orderUpdateService;
+    private final OrderDtoMapper orderDtoMapper;
     private final CustomerService customerService;
-    private static final String noStatus = "no status";
+    private final CustomerDtoMapper customerDtoMapper;
 
     @Override
     @Transactional  //проверка на заполнения полей от клиента, и проверка способа оплаты
-    public void createNewOrder(Order order) {
+    public void createNewOrder(OrderDto orderDto) {
+        Order order = orderDtoMapper.dtoToEntity(orderDto);
         Integer customerId = order.getCustomerId();
-        Customer customer = customerService.findById(customerId);
+        CustomerDto customerDto = customerService.findById(customerId);
+        Customer customer = customerDtoMapper.dtoToEntity(customerDto);
         if (!isValidCustomer(customer)) {
             throw new IllegalArgumentException();
         }
@@ -56,36 +65,36 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findById(Integer id) {
-        Optional<Order> orderOptional = orderRepository.findById(id);
-        return orderOptional.orElseThrow(() -> new DataNotFoundException());
-    }
-
-    @Override
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    @Transactional
+    public OrderDto findById(Integer id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        return orderDtoMapper.entityToDto(order);
     }
 
     @Override
     @Transactional
-    public Order update(Integer id, Order orderUpdate) {
-        Optional<Order> orderOptional = orderRepository.findById(id);
-        if (orderOptional.isPresent()) {
-            Order existingOrder = orderOptional.get();
-            Order updated = orderUpdateService.convert(existingOrder, orderUpdate);
-            orderRepository.save(updated);
-            return updated;
-        }
-        throw new DataNotFoundException();
+    public List<OrderDto> findAll() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(orderDtoMapper::entityToDto)
+                .toList();
+    }
 
-
+    @Override
+    @Transactional
+    public void update(Integer id, OrderDto order) {
+        Order existingOrder = orderRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        Order orderUpdate = orderDtoMapper.dtoToEntity(order);
+        Order updated = orderUpdateService.convert(existingOrder, orderUpdate);
+        orderRepository.save(updated);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
         orderRepository.deleteById(id);
-
     }
 
     @Override
@@ -96,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderOptional.get();
             return order.getOrderStatus().name();
         }
-        return noStatus;
+        return NO_STATUS;
     }
 }
 

@@ -17,19 +17,17 @@ class CustomerDtoMapperTest {
     void dtoToEntity_ShouldMapDtoToEntity() {
         // Arrange
         CustomerDto customerDto = new CustomerDto();
-        customerDto.setId(1);
         customerDto.setName("John Doe");
         customerDto.setAddress("123 Main St");
         customerDto.setPhone("555-1234");
         customerDto.setEmail("john@example.com");
-        customerDto.setPaymentMethod("CREDIT_CARD");
+        customerDto.setPaymentMethod("CARD");
         customerDto.setIsBlocked("false");
 
         // Act
         Customer result = customerDtoMapper.dtoToEntity(customerDto);
 
         // Assert
-        assertEquals(customerDto.getId(), result.getId());
         assertEquals(customerDto.getName(), result.getName());
         assertEquals(customerDto.getAddress(), result.getAddress());
         assertEquals(customerDto.getPhone(), result.getPhone());
@@ -54,7 +52,6 @@ class CustomerDtoMapperTest {
         CustomerDto result = customerDtoMapper.entityToDto(customer);
 
         // Assert
-        assertEquals(customer.getId(), result.getId());
         assertEquals(customer.getName(), result.getName());
         assertEquals(customer.getAddress(), result.getAddress());
         assertEquals(customer.getPhone(), result.getPhone());

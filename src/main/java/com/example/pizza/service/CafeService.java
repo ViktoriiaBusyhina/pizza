@@ -1,5 +1,6 @@
 package com.example.pizza.service;
 
+import com.example.pizza.dto.CafeDto;
 import com.example.pizza.entity.Cafe;
 
 import java.util.List;
@@ -14,14 +15,14 @@ public interface CafeService {
      *
      * @param cafe the cafe to create
      */
-    void createNewCafe(Cafe cafe);
+    void createNewCafe(CafeDto cafe);
 
     /**
      * Returns a list of all cafes.
      *
      * @return a list of all cafes
      */
-    List<Cafe> findAll();
+    List<CafeDto> findAll();
 
     /**
      * Finds a cafe by its ID.
@@ -29,16 +30,15 @@ public interface CafeService {
      * @param id the ID of the cafe to find
      * @return the cafe with the specified ID, or null if not found
      */
-    Cafe findById(Integer id);
+    CafeDto findById(Integer id);
 
     /**
      * Updates a cafe with the specified ID.
      *
      * @param id    the ID of the cafe to update
      * @param cafe  the updated cafe object
-     * @return the updated cafe
      */
-    Cafe update(Integer id, Cafe cafe);
+    void update(Integer id, CafeDto cafe);
 
     /**
      * Deletes a cafe with the specified ID.

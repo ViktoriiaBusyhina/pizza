@@ -19,7 +19,6 @@ public class PizzaDtoMapper implements DtoMapper<Pizza, PizzaDto> {
      */
     public Pizza dtoToEntity(PizzaDto pizzaDto) {
         Pizza pizza = new Pizza();
-        pizza.setId(pizzaDto.getId());
         pizza.setPizzaName(PizzaName.valueOf(pizzaDto.getPizzaName()));
         pizza.setSize(PizzaSize.valueOf(pizzaDto.getSize()));
         pizza.setQuantity(pizzaDto.getQuantity());
@@ -37,7 +36,6 @@ public class PizzaDtoMapper implements DtoMapper<Pizza, PizzaDto> {
      */
     public PizzaDto entityToDto(Pizza pizza) {
         PizzaDto pizzaDto = new PizzaDto();
-        pizzaDto.setId(pizza.getId());
         pizzaDto.setPizzaName(String.valueOf(pizza.getPizzaName()));
         pizzaDto.setSize(String.valueOf(pizza.getSize()));
         pizzaDto.setQuantity(pizza.getQuantity());

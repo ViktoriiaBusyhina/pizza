@@ -1,5 +1,7 @@
 package com.example.pizza.service.impl;
 
+import com.example.pizza.dto.CafeDto;
+import com.example.pizza.dto.mapper.CafeDtoMapper;
 import com.example.pizza.entity.Cafe;
 import com.example.pizza.exception.DataNotFoundException;
 import com.example.pizza.repository.CafeRepository;
@@ -18,34 +20,37 @@ public class CafeServiceImpl implements CafeService {
 
     private final CafeRepository cafeRepository;
     private final CafeUpdateService cafeUpdateService;
+    private final CafeDtoMapper cafeDtoMapper;
 
     @Override
-    public void createNewCafe(Cafe cafe) {
+    public void createNewCafe(CafeDto cafeDto) {
+        Cafe cafe = cafeDtoMapper.dtoToEntity(cafeDto);
         cafeRepository.save(cafe);
     }
 
     @Override
-    public List<Cafe> findAll() {
-        return cafeRepository.findAll();
+    public List<CafeDto> findAll() {
+        List<Cafe> cafes = cafeRepository.findAll();
+        return cafes.stream()
+                .map(cafeDtoMapper::entityToDto)
+                .toList();
     }
 
     @Override
-    public Cafe findById(Integer id) {
+    public CafeDto findById(Integer id) {
         Optional<Cafe> cafeOptional = cafeRepository.findById(id);
-        return cafeOptional.orElseThrow(() -> new DataNotFoundException());
+        Cafe cafe = cafeOptional.orElseThrow(DataNotFoundException::new);
+        return cafeDtoMapper.entityToDto(cafe);
     }
 
     @Override
     @Transactional
-    public Cafe update(Integer id, Cafe cafeUpdate) {
-        Optional<Cafe> cafeOptional = cafeRepository.findById(id);
-        if (cafeOptional.isPresent()) {
-            Cafe existingCafe = cafeOptional.get();
-            Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
-            cafeRepository.save(updated);
-            return updated;
-        }
-        throw new DataNotFoundException();
+    public void update(Integer id, CafeDto cafe) {
+        Cafe existingCafe = cafeRepository.findById(id)
+                .orElseThrow(DataNotFoundException::new);
+        Cafe cafeUpdate = cafeDtoMapper.dtoToEntity(cafe);
+        Cafe updated = cafeUpdateService.convert(existingCafe, cafeUpdate);
+        cafeRepository.save(updated);
     }
 
     @Override
